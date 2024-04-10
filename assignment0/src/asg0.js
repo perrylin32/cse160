@@ -116,11 +116,11 @@ function main() {
   ctx.fillStyle = 'rgba(0, 0, 0,  1.0)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  //var x = 2.25;
-  //var y = 2.25;
-  //var z = 0;
-  //var v1 = new Vector3([x, y, z]);
+  var x = 2.25;
+  var y = 2.25;
+  var z = 0;
+  var v1 = new Vector3([x, y, z]);
 
-  //drawVector(v1, 'red');
+  drawVector(v1, 'red');
 
 }
