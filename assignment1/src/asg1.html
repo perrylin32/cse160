@@ -1,10 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assignment 2: Drawing Canvas</title>
+
+    <!--Code from w3school for toggle switch-->
+    <!--https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_switch-->
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(18px);
+            -ms-transform: translateX(18px);
+            transform: translateX(18px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+            -webkit-background-clip: text;
+            /* For older versions of Safari and Chrome */
+            background-clip: text;
+            /* Standard property for other modern browsers */
+            color: transparent;
+        }
+    </style>
+
 </head>
+
 <body onload="main()">
     <canvas id="canvas" width="400" height="400">
         Please use a browser that supports "canvas"
@@ -13,25 +89,55 @@
     <br>
     <button id="ClearCanvas" type="button">Clear Canvas</button>
     <br>
-    <h3>Drawing Mode</h3>
+
+    <br>
+    <label for="Drawing Mode"><b>Drawing Mode:</b></label>
+    <br>
     <button id="Squares" type="button">Squares</button>
     <button id="Triangles" type="button">Triangles</button>
-    <button id="Circles"  type="button">Circles</button>
+    <button id="Circles" type="button">Circles</button>
+    <button id="Duck" type="button">Draw Duck</button>
     <br>
-
-    <h3>Shape Color</h3>
-    <label for="Red">Red</label>
+    <br>
+    <label for="Shape Color"><b>Shape Color:</b></label>
+    <br>
+    <label for="Red"><b>Red</b></label>
     <input id="Red" type="range" min="0" max="100" value="50" />
-    <label for="Green">Green</label>
+    <label for="Green"><b>Green</b></label>
     <input id="Green" type="range" min="0" max="100" value="50" />
-    <label for="Blue">Blue</label>
+    <label for="Blue"><b>Blue</b></label>
     <input id="Blue" type="range" min="0" max="100" value="50" />
     <br>
 
-    <label for="Shape Size">Shape Size:</label>
-    <input id="ShapeSize" type="range" min="5" max="40" value="5" />
-    <label for="(Circles)Segment Count">(Circles)Segment Count</label>
-    <input id="SegmentCount" type="range" min="3" max="50" value="12" />
+    <label for="Shape Size"><b>Shape Size:</b></label>
+    <input id="ShapeSize" type="range" min="5" max="40" value="20" />
+    <label for="(Circles)Segment Count"><b>(Circles)Segment Count</b></label>
+    <input id="SegmentCount" type="range" min="3" max="50" value="25" />
+
+    <br>
+    <br>
+    <label for="Test" class="gradient-text">Randomized Color</label>
+    <label class="switch">
+        <input type="checkbox" id="rngColor">
+        <span class="slider round"></span>
+    </label>
+    <br>
+    <label for="Test" class="gradient-text">Randomized Shape</label>
+    <label class="switch">
+        <input type="checkbox" id="rngShape">
+        <span class="slider round"></span>
+    </label>
+    <br>
+    <label for="Test"
+    class="gradient-text">Randomized Sizes</label>
+    <label class="switch">
+        <input type="checkbox" id="rngSize">
+        <span class="slider round"></span>
+    </label>
+    <br>
+    <label for="Interval"><b>Update Interval(ms)</b></label>
+    <input id="interval" type="range" min="1" max="100" value="50" />
+    <br>
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
@@ -41,5 +147,23 @@
     <script src="circle.js"></script>
     <script src="asg1.js"></script>
 
+    <p>
+        Perry Lin
+        <br>
+        plin32@ucsc.edu
+        <br>
+        Note to Grader:
+        <br>
+        My awesomeness feature can be found using the "Randomized" switches.
+        <br>
+        Each switch randomizes their respective feature, allowing for the user
+        <br>
+        to create colorful and interesting drawings.
+        <br>
+        <img src="duck.jpg" alt="duck" width="400" height="400">
+    </p>
+
+
 </body>
+
 </html>
