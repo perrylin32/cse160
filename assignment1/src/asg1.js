@@ -30,8 +30,13 @@ let u_FragColor;
 let u_Size;
 let g_selectedColor = [0.5, 0.5, 0.5, 1.0];
 let g_selectedShape = SQUARES;
-let g_selectedSize = 5;
-let g_selectedSegment = 10;
+let g_selectedSize = 20;
+let g_selectedSegment = 25;
+let intervalId;
+let rngShape = 0;
+let rngColor = 0;
+let rngSize = 0;
+let interval = 10;
 
 function setupWebGL() {
     // Retrieve <canvas> element
@@ -75,18 +80,130 @@ function connectVariablesToGLSL() {
 
 function addActionFromHTMLUI() {
 
-    document.getElementById('Squares').onclick = function () { g_selectedShape = SQUARES; };
-    document.getElementById('Triangles').onclick = function () { g_selectedShape = TRIANGLES; };
-    document.getElementById('Circles').onclick = function () { g_selectedShape = CIRCLES; };
+    document.getElementById('Squares').onclick = function () { stopInterval(); g_selectedShape = SQUARES; };
+    document.getElementById('Triangles').onclick = function () { stopInterval(); g_selectedShape = TRIANGLES; };
+    document.getElementById('Circles').onclick = function () { stopInterval(); g_selectedShape = CIRCLES; };
+    document.getElementById('Duck').onclick = function () { stopInterval(); g_shapesList = []; renderAllShapes(); drawDuck(); };
 
-    document.getElementById('ClearCanvas').onclick = function () {g_shapesList = []; renderAllShapes(); };
+    document.getElementById('ClearCanvas').onclick = function () { g_shapesList = []; renderAllShapes(); };
 
-    document.getElementById('Red').addEventListener('mouseup', function () { g_selectedColor[0] = this.value / 100; });
-    document.getElementById('Green').addEventListener('mouseup', function () { g_selectedColor[1] = this.value / 100; });
-    document.getElementById('Blue').addEventListener('mouseup', function () { g_selectedColor[2] = this.value / 100; });
+    document.getElementById('Red').addEventListener('mouseup', function () { stopInterval(); g_selectedColor[0] = this.value / 100; });
+    document.getElementById('Green').addEventListener('mouseup', function () { stopInterval(); g_selectedColor[1] = this.value / 100; });
+    document.getElementById('Blue').addEventListener('mouseup', function () { stopInterval(); g_selectedColor[2] = this.value / 100; });
 
-    document.getElementById('ShapeSize').addEventListener('mouseup', function () { g_selectedSize = this.value; });
-    document.getElementById('SegmentCount').addEventListener('mouseup', function () { g_selectedSegment = this.value; });
+    document.getElementById('ShapeSize').addEventListener('mouseup', function () { stopInterval(); g_selectedSize = this.value; });
+    document.getElementById('SegmentCount').addEventListener('mouseup', function () { stopInterval(); g_selectedSegment = this.value; });
+
+    /*
+    document.getElementById('RGB').onclick = function () {
+        if (!intervalId) {
+            startRandomInterval();
+        }
+    };
+    */
+
+    document.getElementById('rngShape').addEventListener('change', function () { 
+        if (this.checked){
+            rngShape = 1;
+        }else{
+            rngShape = 0;
+        }
+        if (!intervalId) {
+            startRandomInterval();
+        }
+        } 
+    );
+
+    document.getElementById('rngColor').addEventListener('change', function () { 
+        if (this.checked){
+            rngColor = 1;
+        }else{
+            rngColor = 0;
+        }
+        if (!intervalId) {
+            startRandomInterval();
+        }
+        } 
+    );
+
+    document.getElementById('rngSize').addEventListener('change', function () { 
+        if (this.checked){
+            rngSize = 1;
+        }else{
+            rngSize = 0;
+        }
+        if (!intervalId) {
+            startRandomInterval();
+        }
+        } 
+    );
+
+    document.getElementById('interval').addEventListener('mouseup', function () { interval = this.value; stopInterval(); startRandomInterval(); });
+}
+
+// Checks which rng toggles have been selected and enables them to be randomized
+function startRandomInterval() {
+    intervalId = setInterval(function() {
+        if (rngColor) {
+            g_selectedColor = [Math.random(), Math.random(), Math.random(), 1.0];
+        }
+        if (rngShape) {
+            g_selectedShape = Math.floor(Math.random() * 3);
+        }
+        if (rngSize) {
+            g_selectedSize = Math.floor(Math.random() * 40) + 5;
+        }
+        
+    }, interval);
+}
+
+// Function to stop the interval so other functionalities can work properly
+// Note must turn off rng toggles if you want the regular drawing mode
+function stopInterval() {
+    if (!rngShape && !rngColor && !rngSize) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+}
+
+
+function drawDuck() {
+    // Head of duck
+    colorTriangle([0.29, 0.86, 0.29, 0.57, 0.71, 0.57], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.29, 0.57, 0.71, 0.57, 0.29, 0.29], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.29, 0.86, 0.00, 0.71, 0.29, 0.71], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.00, 0.71, 0.29, 0.71, 0.29, 0.43], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.00, 0.71, 0.00, 0.43, 0.29, 0.43], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.00, 0.43, 0.29, 0.43, 0.29, 0.29], [1.0, 0.5, 0.0, 1.0]);
+
+    // Upper body of duck
+    colorTriangle([0.00, 0.43, -0.43, 0.00, 0.00, 0.00], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.00, 0.43, 0.00, 0.00, 0.14, 0.00], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.00, 0.43, 0.29, 0.29, 0.14, 0.00], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.29, 0.29, 0.14, 0.00, 0.71, -0.29], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([-0.43, 0.00, -0.71, -0.29, 0.00, -0.29], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([-0.43, 0.00, 0.00, 0.00, 0.00, -0.29], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.00, 0.00, 0.14, 0.00, 0.00, -0.29], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.14, 0.00, 0.00, -0.29, 0.71, -0.29], [1.0, 0.5, 0.0, 1.0]);
+
+    // Lower Body + Legs of duck
+    colorTriangle([-0.71, -0.29, -0.29, -0.29, -0.43, -0.57], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([-0.29, -0.29, -0.43, -0.57, 0.00, -0.57], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([-0.29, -0.29, 0.14, -0.29, 0.00, -0.57], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([0.14, -0.29, 0.00, -0.57, 0.43, -0.57], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.14, -0.29, 0.71, -0.29, 0.43, -0.57], [1.0, 0.42, 0.0, 1.0]);
+
+    colorTriangle([-0.29, -0.57, -0.14, -0.57, -0.29, -0.86], [0.5, 0.5, 0.5, 1.0]);
+    colorTriangle([-0.14, -0.57, -0.29, -0.86, -0.14, -0.86], [0.5, 0.5, 0.5, 1.0]);
+    colorTriangle([-0.14, -0.71, 0.00, -0.71, 0.00, -0.86], [0.5, 0.5, 0.5, 1.0]);
+    colorTriangle([-0.14, -0.71, -0.14, -0.86, 0.00, -0.86], [0.5, 0.5, 0.5, 1.0]);
+
+    colorTriangle([0.14, -0.57, 0.29, -0.57, 0.14, -0.86], [0.5, 0.5, 0.5, 1.0]);
+    colorTriangle([0.29, -0.57, 0.14, -0.86, 0.29, -0.86], [0.5, 0.5, 0.5, 1.0]);
+    colorTriangle([0.29, -0.71, 0.43, -0.71, 0.29, -0.86], [0.5, 0.5, 0.5, 1.0]);
+    colorTriangle([0.43, -0.71, 0.29, -0.86, 0.43, -0.86], [0.5, 0.5, 0.5, 1.0]);
+
+    
 }
 
 function main() {
