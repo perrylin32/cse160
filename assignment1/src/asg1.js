@@ -28,7 +28,7 @@ let gl;
 let a_Position;
 let u_FragColor;
 let u_Size;
-let g_selectedColor = [0.5, 0.5, 0.5, 1.0];
+let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedShape = SQUARES;
 let g_selectedSize = 20;
 let g_selectedSegment = 25;
@@ -36,7 +36,7 @@ let intervalId;
 let rngShape = 0;
 let rngColor = 0;
 let rngSize = 0;
-let interval = 10;
+let interval = 50;
 
 function setupWebGL() {
     // Retrieve <canvas> element
@@ -119,6 +119,9 @@ function addActionFromHTMLUI() {
             rngColor = 1;
         }else{
             rngColor = 0;
+            g_selectedColor[0] = parseFloat(document.getElementById('Red').value) / 100;
+            g_selectedColor[1] = parseFloat(document.getElementById('Green').value) / 100;
+            g_selectedColor[2] = parseFloat(document.getElementById('Blue').value) / 100;
         }
         if (!intervalId) {
             startRandomInterval();
@@ -131,6 +134,7 @@ function addActionFromHTMLUI() {
             rngSize = 1;
         }else{
             rngSize = 0;
+            g_selectedSize = document.getElementById('ShapeSize').value;
         }
         if (!intervalId) {
             startRandomInterval();
@@ -168,30 +172,32 @@ function stopInterval() {
 
 
 function drawDuck() {
-    // Head of duck
+
+
+    // Head and beak of duck
     colorTriangle([0.29, 0.86, 0.29, 0.57, 0.71, 0.57], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([0.29, 0.57, 0.71, 0.57, 0.29, 0.29], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.29, 0.86, 0.00, 0.71, 0.29, 0.71], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.00, 0.71, 0.29, 0.71, 0.29, 0.43], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([0.00, 0.71, 0.00, 0.43, 0.29, 0.43], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.00, 0.43, 0.29, 0.43, 0.29, 0.29], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.29, 0.57, 0.71, 0.57, 0.29, 0.29], [1.0, 0.6, 0.1, 1.0]);
+    colorTriangle([0.29, 0.86, 0.00, 0.71, 0.29, 0.71], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([0.00, 0.71, 0.29, 0.71, 0.29, 0.43], [1.0, 1.0, 0.35, 1.0]);
+    colorTriangle([0.00, 0.71, 0.00, 0.43, 0.29, 0.43], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([0.00, 0.43, 0.29, 0.43, 0.29, 0.29], [1.0, 1.0, 0.35, 1.0]);
 
     // Upper body of duck
-    colorTriangle([0.00, 0.43, -0.43, 0.00, 0.00, 0.00], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.00, 0.43, 0.00, 0.00, 0.14, 0.00], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([0.00, 0.43, 0.29, 0.29, 0.14, 0.00], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.29, 0.29, 0.14, 0.00, 0.71, -0.29], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([-0.43, 0.00, -0.71, -0.29, 0.00, -0.29], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([-0.43, 0.00, 0.00, 0.00, 0.00, -0.29], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([0.00, 0.00, 0.14, 0.00, 0.00, -0.29], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.14, 0.00, 0.00, -0.29, 0.71, -0.29], [1.0, 0.5, 0.0, 1.0]);
+    colorTriangle([0.00, 0.43, -0.43, 0.00, 0.00, 0.00], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([0.00, 0.43, 0.00, 0.00, 0.14, 0.00], [1.0, 1.0, 0.35, 1.0]);
+    colorTriangle([0.00, 0.43, 0.29, 0.29, 0.14, 0.00], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([0.29, 0.29, 0.14, 0.00, 0.71, -0.29], [1.0, 1.0, 0.35, 1.0]);
+    colorTriangle([-0.43, 0.00, -0.71, -0.29, 0.00, -0.29], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([-0.43, 0.00, 0.00, 0.00, 0.00, -0.29], [1.0, 1.0, 0.35, 1.0]);
+    colorTriangle([0.00, 0.00, 0.14, 0.00, 0.00, -0.29], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([0.14, 0.00, 0.00, -0.29, 0.71, -0.29], [1.0, 1.0, 0.35, 1.0]);
 
     // Lower Body + Legs of duck
-    colorTriangle([-0.71, -0.29, -0.29, -0.29, -0.43, -0.57], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([-0.29, -0.29, -0.43, -0.57, 0.00, -0.57], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([-0.29, -0.29, 0.14, -0.29, 0.00, -0.57], [1.0, 0.42, 0.0, 1.0]);
-    colorTriangle([0.14, -0.29, 0.00, -0.57, 0.43, -0.57], [1.0, 0.5, 0.0, 1.0]);
-    colorTriangle([0.14, -0.29, 0.71, -0.29, 0.43, -0.57], [1.0, 0.42, 0.0, 1.0]);
+    colorTriangle([-0.71, -0.29, -0.29, -0.29, -0.43, -0.57], [1.0, 1.0, 0.15, 1.0]);
+    colorTriangle([-0.29, -0.29, -0.43, -0.57, 0.00, -0.57], [1.0, 1.0, 0.45, 1.0]);
+    colorTriangle([-0.29, -0.29, 0.14, -0.29, 0.00, -0.57], [1.0, 1.0, 0.35, 1.0]);
+    colorTriangle([0.14, -0.29, 0.00, -0.57, 0.43, -0.57], [1.0, 1.0, 0.35, 1.0]);
+    colorTriangle([0.14, -0.29, 0.71, -0.29, 0.43, -0.57], [1.0, 1.0, 0.15, 1.0]);
 
     colorTriangle([-0.29, -0.57, -0.14, -0.57, -0.29, -0.86], [0.5, 0.5, 0.5, 1.0]);
     colorTriangle([-0.14, -0.57, -0.29, -0.86, -0.14, -0.86], [0.5, 0.5, 0.5, 1.0]);
@@ -203,7 +209,18 @@ function drawDuck() {
     colorTriangle([0.29, -0.71, 0.43, -0.71, 0.29, -0.86], [0.5, 0.5, 0.5, 1.0]);
     colorTriangle([0.43, -0.71, 0.29, -0.86, 0.43, -0.86], [0.5, 0.5, 0.5, 1.0]);
 
-    
+    // Eye of duck
+    let eye = new Point();
+    eye.position = [0.15, 0.65];
+    eye.color = [0.0, 0.0, 0.0, 1.0];
+    eye.size = 10;
+    eye.render();
+
+    let pupil = new Point();
+    pupil.position = [0.17, 0.66];
+    pupil.color = [1.0, 1.0, 1.0, 1.0];
+    pupil.size = 5;
+    pupil.render();
 }
 
 function main() {

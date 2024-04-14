@@ -102,11 +102,11 @@
     <label for="Shape Color"><b>Shape Color:</b></label>
     <br>
     <label for="Red"><b>Red</b></label>
-    <input id="Red" type="range" min="0" max="100" value="50" />
+    <input id="Red" type="range" min="0" max="100" value="100" />
     <label for="Green"><b>Green</b></label>
-    <input id="Green" type="range" min="0" max="100" value="50" />
+    <input id="Green" type="range" min="0" max="100" value="100" />
     <label for="Blue"><b>Blue</b></label>
-    <input id="Blue" type="range" min="0" max="100" value="50" />
+    <input id="Blue" type="range" min="0" max="100" value="100" />
     <br>
 
     <label for="Shape Size"><b>Shape Size:</b></label>
@@ -154,11 +154,19 @@
         <br>
         Note to Grader:
         <br>
-        My awesomeness feature can be found using the "Randomized" switches.
+        My awesomeness feature can be found using the "Randomized" toggles.
         <br>
-        Each switch randomizes their respective feature, allowing for the user
+        Each toggle randomizes their respective feature, allowing for the user
         <br>
-        to create colorful and interesting drawings.
+        to create colorful and interesting drawings. Note that after untoggling
+        <br>
+        the randomized shape, the shape will remain the last drawn shape that was
+        <br>
+        randomly selected until you click on one of the shape buttons. Also for the
+        <br>
+        update interval, it influences the time before the shape/color/size is randomly
+        <br>
+        chosen again(higher = less frequence changes while lower = more frequent changes).
         <br>
         <img src="duck.jpg" alt="duck" width="400" height="400">
     </p>
