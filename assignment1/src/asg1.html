@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2: Drawing Canvas</title>
+</head>
+<body onload="main()">
+    <canvas id="canvas" width="400" height="400">
+        Please use a browser that supports "canvas"
+    </canvas>
+
+    <br>
+    <button id="ClearCanvas" type="button">Clear Canvas</button>
+    <br>
+    <h3>Drawing Mode</h3>
+    <button id="Squares" type="button">Squares</button>
+    <button id="Triangles" type="button">Triangles</button>
+    <button id="Circles"  type="button">Circles</button>
+    <br>
+
+    <h3>Shape Color</h3>
+    <label for="Red">Red</label>
+    <input id="Red" type="range" min="0" max="100" value="50" />
+    <label for="Green">Green</label>
+    <input id="Green" type="range" min="0" max="100" value="50" />
+    <label for="Blue">Blue</label>
+    <input id="Blue" type="range" min="0" max="100" value="50" />
+    <br>
+
+    <label for="Shape Size">Shape Size:</label>
+    <input id="ShapeSize" type="range" min="5" max="40" value="5" />
+    <label for="(Circles)Segment Count">(Circles)Segment Count</label>
+    <input id="SegmentCount" type="range" min="3" max="50" value="12" />
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="point.js"></script>
+    <script src="triangle.js"></script>
+    <script src="circle.js"></script>
+    <script src="asg1.js"></script>
+
+</body>
+</html>
