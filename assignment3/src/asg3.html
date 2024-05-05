@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3A: Creating a Virtual World</title>
+</head>
+
+<body onload="main()">
+    <canvas id="canvas" width="400" height="400">
+        Please use a browser that supports "canvas"
+    </canvas>
+
+    <br>
+    
+    <p id="performance"></p>
+
+    <label for="Camera Angle Y"><b>Camera Angle Y</b></label>
+    <input id="angleSliderY" type="range" min="-181" max="180" value="-180">
+    <label for="Camera Angle X"><b>Camera Angle X</b></label>
+    <input id="angleSliderX" type="range" min="0" max="360" value="5">
+    <label for="Camera Angle Z"><b>Camera Angle Z</b></label>
+    <input id="angleSliderZ" type="range" min="0" max="360" value="5">
+    <br>
+
+    <label for="Head"><b>Head</b></label>
+    <input id="headSlider" type="range" min="-5" max="5" value="0">
+    <button type="button" id="headAnimationOn">On</button>
+    <button type="button" id="headAnimationOff">Off</button>
+    <br>
+    <label for="Beak"><b>Beak</b></label>
+    <input id="beakSlider" type="range" min="0" max="20" value="0">
+    <button type="button" id="beakAnimationOn">On</button>
+    <button type="button" id="beakAnimationOff">Off</button>
+    <br>
+    <label for="Body"><b>Body</b></label>
+    <input id="bodySlider" type="range" min="-25" max="25" value="0">
+    <button type="button" id="bodyAnimationOn">On</button>
+    <button type="button" id="bodyAnimationOff">Off</button>
+    <br>
+    <label for="Butt"><b>Butt</b></label>
+    <input id="buttSlider" type="range" min="-5" max="5" value="0">
+    <button type="button" id="buttAnimationOn">On</button>
+    <button type="button" id="buttAnimationOff">Off</button>
+    <br>
+    <label for="Tail"><b>Tail</b></label>
+    <input id="tailSlider" type="range" min="-20" max="20" value="0">
+    <button type="button" id="tailAnimationOn">On</button>
+    <button type="button" id="tailAnimationOff">Off</button>
+    <br>
+    <label for="Left Leg"><b>Left Leg</b></label>
+    <input id="leftLegSlider" type="range" min="-20" max="20" value="0">
+    <button type="button" id="leftLegAnimationOn">On</button>
+    <button type="button" id="leftLegAnimationOff">Off</button>
+    <br>
+    <label for="Right Leg"><b>Right Leg</b></label>
+    <input id="rightLegSlider" type="range" min="-20" max="20" value="0">
+    <button type="button" id="rightLegAnimationOn">On</button>
+    <button type="button" id="rightLegAnimationOff">Off</button>
+    <br>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix-cse160.js"></script>
+
+    <script src="triangle.js"></script>
+    <script src="cube.js"></script>
+    <script src="cone.js"></script>
+    <script src="asg2.js"></script>
+    
+</body>
+
+</html>
