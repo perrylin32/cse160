@@ -4,9 +4,15 @@ class Pyramid {
         this.color = [0.5, 0.5, 0.5, 1.0];
         this.matrix = new Matrix4();
         this.baseSize = 1.0; // Length of the square base
+        this.vertexBuffer = null;
     }
 
     render() {
+
+        if (this.vertexBuffer === null) {
+            this.vertexBuffer = gl.createBuffer();
+        }
+        
         var rgba = this.color;
 
         // Set color and transform matrix
@@ -17,40 +23,16 @@ class Pyramid {
         var apex = [0.0, 1.0, 0.0];
 
         // Draw the base using two triangles with explicit coordinates
-        drawTriangle3D([
-            -0.5, 0.0, -0.5,  // Bottom left corner
-             0.5, 0.0, -0.5,  // Bottom right corner
-            -0.5, 0.0,  0.5   // Top left corner
-        ]);
-        drawTriangle3D([
-             0.5, 0.0, -0.5,  // Bottom right corner
-             0.5, 0.0,  0.5,  // Top right corner
-            -0.5, 0.0,  0.5   // Top left corner
-        ]);
+        drawTrianglePyramid([-0.5, 0.0, -0.5, 0.5, 0.0, -0.5, -0.5, 0.0,  0.5], this.vertexBuffer);
+        drawTrianglePyramid([0.5, 0.0, -0.5, 0.5, 0.0,  0.5, -0.5, 0.0,  0.5], this.vertexBuffer);
 
         // Draw the sides of the pyramid
         // Darken the color for the pyramid's sides to distinguish them
         gl.uniform4f(u_FragColor, rgba[0] * 0.9, rgba[1] * 0.9, rgba[2] * 0.9, rgba[3]);
 
-        drawTriangle3D([
-             0.0, 1.0,  0.0,  // Apex
-            -0.5, 0.0, -0.5,  // Bottom left corner
-             0.5, 0.0, -0.5   // Bottom right corner
-        ]);
-        drawTriangle3D([
-             0.0, 1.0,  0.0,  // Apex
-             0.5, 0.0, -0.5,  // Bottom right corner
-             0.5, 0.0,  0.5   // Top right corner
-        ]);
-        drawTriangle3D([
-             0.0, 1.0,  0.0,  // Apex
-             0.5, 0.0,  0.5,  // Top right corner
-            -0.5, 0.0,  0.5   // Top left corner
-        ]);
-        drawTriangle3D([
-             0.0, 1.0,  0.0,  // Apex
-            -0.5, 0.0,  0.5,  // Top left corner
-            -0.5, 0.0, -0.5   // Bottom left corner
-        ]);
+        drawTrianglePyramid([0.0, 1.0,  0.0, -0.5, 0.0, -0.5, 0.5, 0.0, -0.5], this.vertexBuffer);
+        drawTrianglePyramid([0.0, 1.0,  0.0, 0.5, 0.0, -0.5, 0.5, 0.0,  0.5], this.vertexBuffer);
+        drawTrianglePyramid([0.0, 1.0,  0.0, 0.5, 0.0,  0.5, -0.5, 0.0,  0.5], this.vertexBuffer);
+        drawTrianglePyramid([0.0, 1.0,  0.0, -0.5, 0.0,  0.5, -0.5, 0.0, -0.5], this.vertexBuffer);
     }
 }
