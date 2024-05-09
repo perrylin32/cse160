@@ -411,7 +411,8 @@ function initTextures() {
 
     var image1 = new Image();  // Create the image object for the second texture
     image1.onload = function () { sendImageToTexture1(image1); };
-    image1.src = '../resources/psyduck.jpg'; // Set source for the second texture
+    // image1.src = '../resources/uv_grid_opengl.jpg'; 
+    image1.src = '../resources/psyduck.jpg'; 
 }
 
 function sendImageToTexture0(image) {
@@ -504,7 +505,7 @@ function drawDuck() {
 
     var body = new Cube();
     body.color = [0.984, 0.816, 0.324, 1.0];
-    body.textureNumber = 0;
+    body.textureNumber = 3;
     body.matrix.translate(-0.25, -0.25, 0.0);
     body.matrix.rotate(g_bodyAngle, 0, 0, 1);
     body.matrix.rotate(-2, 1, 0, 0);
@@ -515,87 +516,87 @@ function drawDuck() {
     body.matrix.scale(0.5, 0.5, 0.5);
     body.render();
 
-    var neck = new Cube();
-    neck.color = [0.984, 0.816, 0.34, 1.0];
-    neck.textureNumber = 0;
-    neck.matrix = neckCoords;
-    neck.matrix.rotate(g_headAngle, 0, 0, 1);
-    var headCoords = new Matrix4(neck.matrix);
-    neck.matrix.scale(0.2, 0.2, 0.2);
-    neck.matrix.translate(0.7, 2, 0.001);
-    neck.render();
+    // var neck = new Cube();
+    // neck.color = [0.984, 0.816, 0.34, 1.0];
+    // neck.textureNumber = 0;
+    // neck.matrix = neckCoords;
+    // neck.matrix.rotate(g_headAngle, 0, 0, 1);
+    // var headCoords = new Matrix4(neck.matrix);
+    // neck.matrix.scale(0.2, 0.2, 0.2);
+    // neck.matrix.translate(0.7, 2, 0.001);
+    // neck.render();
 
-    var head = new Cube();
-    head.textureNumber = 0;
-    head.color = [0.984, 0.816, 0.35, 1.0];
-    head.matrix = headCoords;
-    var beakCoords = new Matrix4(neck.matrix);
-    head.matrix.scale(0.35, 0.35, 0.35);
-    head.matrix.translate(0.2, 1.6, 0.1);
-    head.render();
+    // var head = new Cube();
+    // head.textureNumber = 0;
+    // head.color = [0.984, 0.816, 0.35, 1.0];
+    // head.matrix = headCoords;
+    // var beakCoords = new Matrix4(neck.matrix);
+    // head.matrix.scale(0.35, 0.35, 0.35);
+    // head.matrix.translate(0.2, 1.6, 0.1);
+    // head.render();
 
-    var beak = new Cube();
-    beak.textureNumber = 0;
-    beak.color = [0.926, 0.904, 0.739, 1.0];
-    beak.matrix = beakCoords;
-    beak.matrix.scale(1.4, 0.3, 0.8);
-    beak.matrix.translate(-0.1, 4.5, 0.8);
-    beak.matrix.rotate(-45, 1, 0, 0);
-    beak.matrix.rotate(g_beakAngle, 1, 0, 0);
-    beak.render();
+    // var beak = new Cube();
+    // beak.textureNumber = 0;
+    // beak.color = [0.926, 0.904, 0.739, 1.0];
+    // beak.matrix = beakCoords;
+    // beak.matrix.scale(1.4, 0.3, 0.8);
+    // beak.matrix.translate(-0.1, 4.5, 0.8);
+    // beak.matrix.rotate(-45, 1, 0, 0);
+    // beak.matrix.rotate(g_beakAngle, 1, 0, 0);
+    // beak.render();
 
-    var tail = new Cube();
-    tail.textureNumber = 0;
-    tail.color = [0.984, 0.82, 0.35, 1.0];
-    tail.matrix = tail1;
-    tail.matrix.scale(0.45, 0.45, 0.45);
-    tail.matrix.translate(0.05, 0.03, -0.4);
-    tail.matrix.rotate(-2, 75, 0, 1);
-    tail.matrix.rotate(g_tailSegAngle, 0.5, 0, 0);
-    tail.render();
+    // var tail = new Cube();
+    // tail.textureNumber = 0;
+    // tail.color = [0.984, 0.82, 0.35, 1.0];
+    // tail.matrix = tail1;
+    // tail.matrix.scale(0.45, 0.45, 0.45);
+    // tail.matrix.translate(0.05, 0.03, -0.4);
+    // tail.matrix.rotate(-2, 75, 0, 1);
+    // tail.matrix.rotate(g_tailSegAngle, 0.5, 0, 0);
+    // tail.render();
 
-    var tailTip = new Pyramid(2.0, 1.0, 36);
-    tailTip.textureNumber = 0;
-    tailTip.color = [0.984, 0.816, 0.35, 1.0];
-    tailTip.matrix = tail.matrix;
-    tailTip.matrix.scale(0.8, 0.8, 0.8);
-    tailTip.matrix.rotate(-90, 1, 0.02, 0);
-    tailTip.matrix.translate(0.6, 1.0, 0.6);
-    tailTip.matrix.rotate(g_tailAngle, 1, 0, 0);
-    tailTip.render();
+    // var tailTip = new Pyramid(2.0, 1.0, 36);
+    // tailTip.textureNumber = 0;
+    // tailTip.color = [0.984, 0.816, 0.35, 1.0];
+    // tailTip.matrix = tail.matrix;
+    // tailTip.matrix.scale(0.8, 0.8, 0.8);
+    // tailTip.matrix.rotate(-90, 1, 0.02, 0);
+    // tailTip.matrix.translate(0.6, 1.0, 0.6);
+    // tailTip.matrix.rotate(g_tailAngle, 1, 0, 0);
+    // tailTip.render();
 
-    var leftLeg = new Cube();
+    // var leftLeg = new Cube();
 
-    leftLeg.color = [0.8, 0.8, 0.8, 1];
-    leftLeg.matrix = leftLegCoord;
-    leftLeg.matrix.rotate(g_leftLegAngle, 1, 0, 0);
-    var leftFeetCoord = new Matrix4(leftLeg.matrix);
-    leftLeg.matrix.scale(0.1, 0.3, 0.1);
-    leftLeg.matrix.translate(0.1, -0.5, -2);
-    leftLeg.render();
+    // leftLeg.color = [0.8, 0.8, 0.8, 1];
+    // leftLeg.matrix = leftLegCoord;
+    // leftLeg.matrix.rotate(g_leftLegAngle, 1, 0, 0);
+    // var leftFeetCoord = new Matrix4(leftLeg.matrix);
+    // leftLeg.matrix.scale(0.1, 0.3, 0.1);
+    // leftLeg.matrix.translate(0.1, -0.5, -2);
+    // leftLeg.render();
 
-    var leftFeet = new Cube();
-    leftFeet.color = [0.926, 0.904, 0.739, 1.0];
-    leftFeet.matrix = leftFeetCoord;
-    leftFeet.matrix.scale(0.2, 0.03, 0.3);
-    leftFeet.matrix.translate(-0.2, -5.01, -0.01);
-    leftFeet.render();
+    // var leftFeet = new Cube();
+    // leftFeet.color = [0.926, 0.904, 0.739, 1.0];
+    // leftFeet.matrix = leftFeetCoord;
+    // leftFeet.matrix.scale(0.2, 0.03, 0.3);
+    // leftFeet.matrix.translate(-0.2, -5.01, -0.01);
+    // leftFeet.render();
 
-    var rightLeg = new Cube();
-    rightLeg.color = [0.8, 0.8, 0.8, 1];
-    rightLeg.matrix = rightLegCoord;
-    rightLeg.matrix.rotate(g_rightLegAngle, 1, 0, 0);
-    var rightFeetCoord = new Matrix4(rightLeg.matrix);
-    rightLeg.matrix.scale(0.1, 0.3, 0.1);
-    rightLeg.matrix.translate(3.8, -0.5, -2);
-    rightLeg.render();
+    // var rightLeg = new Cube();
+    // rightLeg.color = [0.8, 0.8, 0.8, 1];
+    // rightLeg.matrix = rightLegCoord;
+    // rightLeg.matrix.rotate(g_rightLegAngle, 1, 0, 0);
+    // var rightFeetCoord = new Matrix4(rightLeg.matrix);
+    // rightLeg.matrix.scale(0.1, 0.3, 0.1);
+    // rightLeg.matrix.translate(3.8, -0.5, -2);
+    // rightLeg.render();
 
-    var rightFeet = new Cube();
-    rightFeet.color = [0.926, 0.904, 0.739, 1.0];
-    rightFeet.matrix = rightFeetCoord;
-    rightFeet.matrix.scale(0.2, 0.03, 0.3);
-    rightFeet.matrix.translate(1.7, -5.01, -0.01);
-    rightFeet.render();
+    // var rightFeet = new Cube();
+    // rightFeet.color = [0.926, 0.904, 0.739, 1.0];
+    // rightFeet.matrix = rightFeetCoord;
+    // rightFeet.matrix.scale(0.2, 0.03, 0.3);
+    // rightFeet.matrix.translate(1.7, -5.01, -0.01);
+    // rightFeet.render();
 }
 
 function renderAllShapes() {

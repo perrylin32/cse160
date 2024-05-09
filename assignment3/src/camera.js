@@ -19,16 +19,6 @@ class Camera {
         );
     }
 
-    // moveForward(speed) {
-    //     var f = new Vector3();
-    //     f.set(this.at);
-    //     f.sub(this.eye);
-    //     f.normalize();
-    //     f.mul(speed);
-    //     this.at.add(f);
-    //     this.eye.add(f);
-    // }
-
     moveForward(speed) {
         var f = new Vector3();
         f.set(this.at);
@@ -37,7 +27,6 @@ class Camera {
         f.mul(speed);
         this.at.add(f);
         this.eye.add(f);
-        // console.log(`Moved forward: eye at ${this.eye.toString()}, at at ${this.at.toString()}`);
         this.updateViewMatrix();
     }
 
@@ -78,27 +67,6 @@ class Camera {
         this.updateViewMatrix();
     }
 
-    // panLeft(alpha) {
-    //     var f = new Vector3();
-    //     var rotationMatrix = new Matrix4();
-    //     f.set(this.at);
-    //     f.sub(this.eye);
-    //     rotationMatrix.setRotate(alpha, this.up[0], this.up[1], this.up[2]);
-    //     var f_prime = rotationMatrix.multiplyVector3(f);
-    //     this.at = this.eye.add(f_prime);
-    //     this.updateViewMatrix();
-    // }
-
-    // panRight(alpha) {
-    //     var f = new Vector3();
-    //     var rotationMatrix = new Matrix4();
-    //     f.set(this.at);
-    //     f.sub(this.eye);
-    //     rotationMatrix.setRotate(-alpha, this.up[0], this.up[1], this.up[2]);
-    //     var f_prime = rotationMatrix.multiplyVector3(f);
-    //     this.at = this.eye.add(f_prime);
-    //     this.updateViewMatrix();
-    // }
     panLeft(degrees) {
         let direction = new Vector3();
         direction.set(this.at);
@@ -108,7 +76,6 @@ class Camera {
         let rotatedDirection = rotationMatrix.multiplyVector3(direction);
         this.at.set(this.eye);
         this.at.add(rotatedDirection);
-        console.log(`Panned left: eye at ${this.eye.toString()}, at at ${this.at.toString()}`);
         this.updateViewMatrix();
     }
     
@@ -121,7 +88,6 @@ class Camera {
         let rotatedDirection = rotationMatrix.multiplyVector3(direction);
         this.at.set(this.eye);
         this.at.add(rotatedDirection);
-        console.log(`Panned right: eye at ${this.eye.toString()}, at at ${this.at.toString()}`);
         this.updateViewMatrix();
     }
 }
