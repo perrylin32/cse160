@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 3A: Creating a Virtual World</title>
+    <title>Assignment 3: Psyduck's Maze</title>
 </head>
 
 <body onload="main()">
@@ -23,42 +23,35 @@
     <label for="Camera Angle Z"><b>Camera Angle Z</b></label>
     <input id="angleSliderZ" type="range" min="0" max="360" value="5">
     <br>
-
-    <label for="Head"><b>Head</b></label>
-    <input id="headSlider" type="range" min="-5" max="5" value="0">
-    <button type="button" id="headAnimationOn">On</button>
-    <button type="button" id="headAnimationOff">Off</button>
-    <br>
-    <label for="Beak"><b>Beak</b></label>
-    <input id="beakSlider" type="range" min="0" max="20" value="0">
-    <button type="button" id="beakAnimationOn">On</button>
-    <button type="button" id="beakAnimationOff">Off</button>
-    <br>
-    <label for="Body"><b>Body</b></label>
-    <input id="bodySlider" type="range" min="-25" max="25" value="0">
-    <button type="button" id="bodyAnimationOn">On</button>
-    <button type="button" id="bodyAnimationOff">Off</button>
-    <br>
-    <label for="Butt"><b>Butt</b></label>
-    <input id="buttSlider" type="range" min="-5" max="5" value="0">
-    <button type="button" id="buttAnimationOn">On</button>
-    <button type="button" id="buttAnimationOff">Off</button>
-    <br>
-    <label for="Tail"><b>Tail</b></label>
-    <input id="tailSlider" type="range" min="-20" max="20" value="0">
-    <button type="button" id="tailAnimationOn">On</button>
-    <button type="button" id="tailAnimationOff">Off</button>
-    <br>
-    <label for="Left Leg"><b>Left Leg</b></label>
-    <input id="leftLegSlider" type="range" min="-20" max="20" value="0">
-    <button type="button" id="leftLegAnimationOn">On</button>
-    <button type="button" id="leftLegAnimationOff">Off</button>
-    <br>
-    <label for="Right Leg"><b>Right Leg</b></label>
-    <input id="rightLegSlider" type="range" min="-20" max="20" value="0">
-    <button type="button" id="rightLegAnimationOn">On</button>
-    <button type="button" id="rightLegAnimationOff">Off</button>
-    <br>
+    <p>
+        One day, I took my flock of ducks to Psyduck's maze, a maze based on their favorite duck :D!
+        <br>
+        BUT oh no's!!! It would seem like I have lost my all but one of my ducks in this maze! D:
+        <br>
+        Can you help me find my ducks by traversing through this maze and locating each duck?
+        <br>
+        <br>
+        Controls: 
+        <br>
+        w: Move forward
+        <br>
+        s: Move backwards
+        <br>
+        a: Move to the left
+        <br>
+        d: Move to the right
+        <br>
+        q: Turn the camera to the left
+        <br>
+        e: Turn the camera to the right
+        <br>
+        f: Add a wall to top of stack
+        <br>
+        r: Delete a wall from top of stack
+        <br>
+        <br>
+        (P.S: Don't tell anyone, but I heard that this maze contains a literal vault filled with ducks o.o)
+    </p>
 
     <p>
         Perry Lin
@@ -67,6 +60,11 @@
         <br>
         Note To Grader:
         <br>
+        Add and delete blocks is very dependent on if the specific block the camera is on
+        <br>
+        and likely will add/delete one of the blocks around you, especially if you panned the
+        <br>
+        camera beforehand.
     </p>
 
     <script src="../lib/webgl-utils.js"></script>
