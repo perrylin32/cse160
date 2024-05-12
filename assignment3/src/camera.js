@@ -1,5 +1,5 @@
 class Camera {
-    constructor() {
+    constructor(g_map) {
         this.fov = 60;
         this.eye = new Vector3([0, 0, 0]);
         this.at = new Vector3([0, 0, -1]);
@@ -8,7 +8,9 @@ class Camera {
         this.viewMat = new Matrix4();
         this.projMat = new Matrix4();
         this.updateViewMatrix();
-
+        this.g_map = g_map;
+        this.startXPosition = 19;
+        this.startYPosition = 24;
     }
 
     updateViewMatrix() {
@@ -18,7 +20,7 @@ class Camera {
             this.up.elements[0], this.up.elements[1], this.up.elements[2]
         );
     }
-
+    
     moveForward(speed) {
         var f = new Vector3();
         f.set(this.at);
@@ -91,4 +93,3 @@ class Camera {
         this.updateViewMatrix();
     }
 }
-
