@@ -24,6 +24,7 @@ var FSHADER_SOURCE =
     uniform vec4 u_FragColor;
     uniform sampler2D u_Sampler0;
     uniform sampler2D u_Sampler1;
+    uniform sampler2D u_Sampler2;
     uniform int u_whichTexture;
     void main() {
 
@@ -33,8 +34,10 @@ var FSHADER_SOURCE =
             gl_FragColor = vec4(v_UV, 1.0, 1.0);
         } else if (u_whichTexture == 2) {
             gl_FragColor = texture2D(u_Sampler0, v_UV);
-        } else if (u_whichTexture == 3){
+        } else if (u_whichTexture == 3) {
             gl_FragColor = texture2D(u_Sampler1, v_UV);
+        } else if (u_whichTexture == 4) {
+            gl_FragColor = texture2D(u_Sampler2, v_UV);
         } else {
             gl_FragColor = vec4(1.0, 0.2, 0.2, 1);
         }
@@ -56,61 +59,52 @@ let u_GlobalRotateMatrix;
 let u_whichTexture;
 let u_Sampler0;
 let u_Sampler1;
+let u_Sampler2;
 
-// Simplified g_map for testing purposes
-// var g_map = [
-//     [1, 1, 1, 1, 1, 1, 1, 1],
-//     [1, 0, 0, 3, 0, 0, 0, 1],
-//     [1, 0, 1, 0, 0, 1, 0, 1],
-//     [1, 6, 0, 2, 1, 0, 0, 1],
-//     [1, 1, 0, 1, 0, 0, 0, 1],
-//     [1, 0, 0, 2, 0, 3, 0, 1],
-//     [1, 0, 1, 0, 0, 0, 0, 1],
-//     [1, 1, 1, 1, 1, 1, 1, 1]
-// ];
-
-
-// start at where the 4, 5 are next to each other
+// Maze starts at -1 or g_map[19][24] facing g_map[19][23]
+// All integers > 0 are walls and represent the height of the wall
+// -2 is vault ducks
+// -3 are lost maze ducks
 var g_map = [
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-    [5, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 5],
-    [5, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 3, 3, 4, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 5],
-    [5, 0, 3, 2, 2, 3, 4, 4, 3, 4, 2, 1, 0, 0, 0, 0, 4, 4, 3, 3, 4, 3, 4, 4, 3, 4, 4, 4, 4, 4, 3, 3, 4, 3, 4, 3, 3, 3, 0, 5],
-    [5, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 4, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 2, 1, 2, 1, 3, 0, 0, 1, 0, 0, 3, 0, 0, 0, 3, 1, 2, 3, 3, 2, 1, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 4, 2, 4, 3, 3, 4, 5],
-    [5, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 5, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 1, 1, 2, 0, 0, 1, 0, 2, 0, 0, 0, 5],
-    [5, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 3, 0, 2, 2, 3, 2, 3, 3, 4, 4, 0, 1, 0, 0, 3, 0, 0, 2, 0, 4, 2, 2, 0, 5],
-    [5, 0, 4, 4, 3, 2, 2, 3, 4, 2, 3, 4, 2, 4, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 3, 4, 2, 3, 0, 3, 0, 3, 0, 5],
-    [5, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 1, 1, 2, 1, 3, 4, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 5],
-    [5, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 2, 0, 0, 1, 2, 3, 1, 0, 3, 0, 1, 1, 5],
-    [5, 0, 3, 0, 0, 4, 2, 3, 3, 2, 2, 0, 2, 0, 2, 0, 3, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 3, 0, 1, 0, 5],
-    [5, 0, 2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 1, 3, 2, 0, 2, 0, 4, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 5],
-    [5, 0, 2, 0, 0, 2, 0, 4, 0, 0, 0, 0, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0, 1, 2, 1, 3, 3, 0, 0, 2, 0, 1, 0, 5],
-    [5, 0, 0, 0, 0, 3, 0, 3, 2, 3, 3, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 3, 0, 2, 0, 0, 0, 0, 3, 0, 0, 3, 0, 1, 0, 5],
-    [5, 0, 0, 0, 0, 3, 0, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4, 0, 3, 0, 4, 2, 3, 4, 0, 0, 0, 0, 0, 0, 5],
+    [5, -3, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, -3, 5],
+    [5, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 3, 3, 4, -3, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, -3, 5],
+    [5, 0, 3, 2, 2, 3, 4, 4, 3, 4, 2, 1, -3, 0, 0, -3, 4, 4, 3, 3, 4, 3, 4, 4, 3, 4, 4, 4, 4, 4, 3, 3, 4, 3, 4, 3, 3, 3, 0, 5],
+    [5, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 3, -3, 0, 0, 0, 3, -3, 0, 0, 0, 0, 0, 0, 0, 5],
+    [5, 0, 4, 0, -3, 0, 0, 0, 0, 3, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+    [5, 0, 2, 1, 2, 1, 3, 0, 0, 1, 0, 0, 3, 0, 0, 0, 3, 1, 2, 3, 3, 2, 1, 0, 0, 3, -3, 0, 0, 0, 1, 0, 0, 4, 2, 4, 3, 3, 4, 5],
+    [5, 0, 3, -3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, -3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 1, 1, 2, 0, 0, 1, -3, 2, -3, 0, -3, 5],
+    [5, 0, 3, -3, 0, 0, 0, 0, 0, 0, 0, -3, 4, 0, 0, 0, 3, 0, 2, 2, 3, 2, 3, 3, 4, 4, 0, 1, 0, 0, 3, 0, 0, 2, 0, 4, 2, 2, 0, 5],
+    [5, 0, 4, 4, 3, 2, 2, 3, 4, 2, 3, 4, 2, 4, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 3, 4, 2, 3, 0, 3, -3, 3, 0, 5],
+    [5, 0, 2, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 3, 0, 3, 0, 0, 1, 1, 2, 1, 3, 4, 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 5],
+    [5, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, -3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 2, 0, 0, 1, 2, 3, 1, 0, 3, 0, 1, 1, 5],
+    [5, 0, 3, 0, 0, 4, 2, 3, 3, 2, 2, 0, 2, 0, 2, 0, 3, -3, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 3, 0, 1, -3, 5],
+    [5, 0, 2, 0, 0, 4, 0, 0, 0, 0, -3, 0, 2, 0, 2, 0, 2, 2, 1, 3, 2, 0, 2, 0, 4, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, -3, 5],
+    [5, 0, 2, 0, 0, 2, 0, 4, -3, 0, 0, 0, 2, 3, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, -3, 4, 0, 0, 1, 2, 1, 3, 3, 0, 0, 2, 0, 1, 0, 5],
+    [5, 0, 0, 0, 0, 3, 0, 3, 2, 3, 3, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 3, 0, 2, 0, 0, 0, -3, 3, 0, 0, 3, 0, 1, 0, 5],
+    [5, 0, 0, 0, 0, 3, 0, 4, 0, -3, 2, 0, 0, 0, 0, 0, 0, 2, -3, 0, 0, 0, 0, 0, 0, 4, 0, 3, 0, 4, 2, 3, 4, 0, 0, 0, 0, 0, 0, 5],
     [5, 0, 1, 1, 0, 2, 0, 0, 0, 2, 3, 2, 4, 2, 3, 3, 2, 2, 2, 2, 0, 0, 0, 0, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 2, 0, 0, 2, 1, 1, 1, 3, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 2, 2, 2, 0, 2, 0, 1, 0, 1, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 5],
-    [5, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 0, 0, 0, 4, 0, 0, 0, 1, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 3, 0, 1, 0, 0, 3, 0, 2, 0, 2, 0, 2, 0, 0, 0, 3, 0, 8, 0, 0, 0, 0, 5, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 4, 0, 0, 4, 0, 2, 0, 1, 0, 1, 2, 1, 1, 2, 1, 2, 0, 2, 2, 2, 2, 0, 2, 1, 2, 2, 1, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 2, 0, 0, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 3, 1, 0, 4, 0, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 2, 0, 0, 2, 0, 2, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 4, 0, 0, 3, 0, 3, 0, 0, 2, 0, 0, 3, 1, 2, 2, 3, 0, 0, 0, 0, 2, 0, 2, 0, 0, 2, 3, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 3, 0, 0, 2, 0, 2, 3, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 2, 2, 2, 2, 2, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 2, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 3, 1, 2, 3, 2, 1, 3, 4, 2, 1, 1, 2, 1, 3, 1, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 3, 3, 2, 3, 0, 0, 0, 0, 0, 0, 0, 5],
-    [5, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
+    [5, 0, 2, -3, 0, 2, 1, 1, 1, 3, -3, 2, 0, 0, 0, 2, 0, 0, -3, 2, 2, 2, 2, 0, 2, 0, 1, 0, 1, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 5],
+    [5, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 4, 0, 0, 0, 0, -1, 0, 0, 0, 1, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
+    [5, 0, 3, 0, 1, 0, 0, 3, 0, 2, 0, 2, 0, 2, 0, 0, 0, 3, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5],
+    [5, 0, 4, 0, 0, 4, 0, 2, 0, 1, 0, 1, 2, 1, 1, 2, 1, 2, 0, 2, 2, 2, 2, 0, 2, 1, 2, 2, 1, 2, 0, 3, 0, 0, -2, 0, -2, 0, 0, 5],
+    [5, 0, 2, -3, 0, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 3, 3, 0, 0, -2, 0, -2, -2, -2, 5],
+    [5, 0, 3, 1, 0, 4, 0, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 2, 0, 0, 2, 0, 2, 0, 1, 0, 0, 0, 0, 3, 0, 0, -2, 0, -2, -2, 0, 5],
+    [5, 0, 4, -3, 0, 3, 0, 3, 0, 0, 2, 0, 0, 3, 1, 2, 2, 3, 0, 0, 0, 0, 2, 0, 2, 0, 0, 2, 3, 3, 0, 3, 0, 0, -2, 0, -2, -2, 0, 5],
+    [5, 0, 3, 0, 0, 2, 0, 2, 3, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 2, 2, 2, 2, 2, 0, 3, -3, 0, 0, 3, 0, 0, -2, 0, -2, -2, 0, 5],
+    [5, 0, 2, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 3, -3, 0, 0, 3, 0, 0, -2, 0, -2, -2, -2, 5],
+    [5, 0, 3, 1, 2, 3, 2, 1, 3, 4, 2, 1, 1, 2, 1, 3, 1, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 3, 3, 2, 3, 0, 0, -2, 0, -2, 0, 0, 5],
+    [5, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, -3, 3, 0, 0, -2, 0, -2, 0, 0, 5],
     [5, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 5],
-    [5, 0, 3, 4, 0, 3, 0, 2, 0, 3, 0, 0, 3, 4, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 2, 2, 4, 0, 0, 0, 0, 0, 0, 0, 3, 0, 5],
+    [5, 0, 3, 4, 0, 3, 0, 2, 0, 3, 0, 0, 3, 4, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 2, 2, 4, 0, 0, 0, 0, 0, 0, 0, 3, -3, 5],
     [5, 0, 0, 4, 0, 4, 0, 1, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 4, 0, 3, 0, 3, 0, 5],
     [5, 3, 0, 3, 0, 3, 0, 2, 0, 0, 3, 2, 3, 0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 3, 0, 3, 0, 0, 0, 5],
     [5, 0, 0, 4, 3, 4, 3, 3, 2, 2, 4, 0, 0, 0, 0, 2, 2, 3, 3, 2, 3, 0, 0, 3, 3, 4, 2, 0, 0, 4, 0, 0, 0, 4, 0, 3, 0, 3, 3, 5],
     [5, 3, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 4, 0, 0, 3, 3, 0, 3, 0, 0, 0, 5],
-    [5, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 2, 0, 3, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 3, 0, 3, 0, 5],
+    [5, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 2, 0, 3, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 3, -3, 0, 3, -3, 3, -3, 5],
     [5, 0, 3, 4, 0, 0, 3, 0, 0, 2, 0, 3, 0, 3, 0, 0, 0, 0, 3, 2, 1, 0, 0, 1, 3, 3, 2, 0, 0, 2, 0, 0, 2, 0, 0, 3, 3, 3, 3, 5],
-    [5, 0, 3, 3, 0, 0, 4, 0, 0, 0, 0, 3, 0, 3, 3, 2, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 3, 2, 0, 3, 0, 0, 0, 5],
-    [5, 0, 3, 2, 0, 0, 3, 0, 0, 0, 0, 4, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 2, 0, 0, 0, 0, 4, 0, 5],
+    [5, 0, 3, 3, 0, 0, 4, 0, 0, 0, 0, 3, 0, 3, 3, 2, 3, 0, 2, -3, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 3, 2, 0, 3, 0, 0, -3, 5],
+    [5, -3, 3, 2, 0, -3, 3, 0, 0, 0, 0, 4, 0, 3, -3, 0, 0, -3, 1, 0, 0, 0, 0, 0, 0, -3, 3, 0, 0, 3, 0, -3, 2, 0, 0, 0, 0, 4, -3, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 ];
 
@@ -122,41 +116,38 @@ function drawMap() {
             var stackHeight = g_map[x][y];
             for (var z = 0; z < stackHeight; z++) {
                 if (stackHeight > 0) {
-                    body.color = [0.0, 1.0, 1.0, 1.0];  
-                    body.textureNumber = 3;
+                    body.color = [0.0, 1.0, 1.0, 1.0];
+
                     if (stackHeight == 5) {
+                        body.textureNumber = 2;
+                    } else if (stackHeight == 1 || stackHeight == 2) {
                         body.textureNumber = 3;
-                    } else if (stackHeight == 4) {
-                        body.textureNumber = 3;
+                    } else {
+                        body.textureNumber = 4;
                     }
+
+
                     body.matrix.setTranslate(0, -0.75, 0);
                     body.matrix.scale(0.8, 0.8, 0.8);
-                    body.matrix.translate(x - (g_map.length / 2), z * 0.8 + z/5, y - (g_map[x].length / 2)); 
+                    body.matrix.translate(x - (g_map.length / 2), z * 0.8 + z / 5, y - (g_map[x].length / 2));
                     body.render();
                 }
+            }
+            if (stackHeight === -2) {
+                var duckMatrix = new Matrix4();
+                duckMatrix.setTranslate(x - (g_map.length / 2), 0.08, y - (g_map[x].length / 2) - 4.45);
+                drawDuck(duckMatrix, [0, 180, 0]);
+            } else if (stackHeight === -3) {
+                var duckMatrix = new Matrix4();
+                duckMatrix.setTranslate((x - (g_map.length / 2)) * 0.8 + 0.25, 0.08, (y - (g_map[x].length / 2)) * 0.8);
+                drawDuck(duckMatrix);
             }
         }
     }
 }
 
-// Stress test
-// function drawMap() {
-//     var body = new Cube();
-//     for (var i = 0; i < 2; i++) {
-//         for (var x = 0; x < 50; x++) {
-//             for (var y = 0; y < 50; y++) {
-//                 body.color = [0.8, 1.0, 1.0, 1.0];
-//                 body.matrix.setTranslate(0, -0.75, 0);
-//                 body.matrix.scale(0.4, 0.4, 0.4);
-//                 body.matrix.translate(x - 16, 0, y - 16);
-//                 body.render();
-//             }
-//         }
-//     }
-// }
-
 // Camera Control variables
-var g_eye = new Vector3([0, 0, -3]);
+var g_eye = new Vector3([0.5, 0, -3]);
 var g_at = new Vector3([0, 0, 100]);
 var g_up = new Vector3([0, 1, 0]);
 var fov = 60;
@@ -180,13 +171,13 @@ let g_rightLegAngle = 0;
 
 let g_headStartAngle = 0;
 
-let g_headAnimation = false;
+let g_headAnimation = true;
 let g_beakAnimation = false;
 let g_bodyAnimation = false;
-let g_tailAnimation = false;
-let g_tailSegAnimation = false;
-let g_leftLegAnimation = false;
-let g_rightLegAnimation = false;
+let g_tailAnimation = true;
+let g_tailSegAnimation = true;
+let g_leftLegAnimation = true;
+let g_rightLegAnimation = true;
 
 let isDragging = false;
 let dragStartX = 0, dragStartY = 0;
@@ -270,6 +261,12 @@ function connectVariablesToGLSL() {
         return;
     }
 
+    u_Sampler2 = gl.getUniformLocation(gl.program, 'u_Sampler2');
+    if (!u_Sampler2) {
+        console.log('Failed to get the storage location of u_Sampler2');
+        return;
+    }
+
     u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
     if (!u_whichTexture) {
         console.log('Failed to get the storage location of u_whichTexture');
@@ -283,99 +280,11 @@ function connectVariablesToGLSL() {
 }
 
 function addActionFromHTMLUI() {
-
     // Camera Control
     document.getElementById('angleSliderY').addEventListener('input', function () { g_globalAngleY = this.value; renderAllShapes(); });
     document.getElementById('angleSliderX').addEventListener('input', function () { g_globalAngleX = this.value; renderAllShapes(); });
     document.getElementById('angleSliderZ').addEventListener('input', function () { g_globalAngleZ = this.value; renderAllShapes(); });
 
-    // Body Sliders
-    document.getElementById('headSlider').addEventListener('input', function () { g_headAngle = this.value; renderAllShapes(); });
-    document.getElementById('beakSlider').addEventListener('input', function () { g_beakAngle = this.value; renderAllShapes(); });
-    document.getElementById('bodySlider').addEventListener('input', function () { g_bodyAngle = this.value; renderAllShapes(); });
-    document.getElementById('buttSlider').addEventListener('input', function () { g_tailSegAngle = this.value; renderAllShapes(); });
-    document.getElementById('tailSlider').addEventListener('input', function () { g_tailAngle = this.value; renderAllShapes(); });
-    document.getElementById('leftLegSlider').addEventListener('input', function () { g_leftLegAngle = this.value; renderAllShapes(); });
-    document.getElementById('rightLegSlider').addEventListener('input', function () { g_rightLegAngle = this.value; renderAllShapes(); });
-
-    // Animations
-    document.getElementById('headAnimationOn').onclick = function () {
-        if (!g_headAnimation) {
-            g_headAnimation = true;
-
-        }
-    };
-    document.getElementById('headAnimationOff').onclick = function () {
-        if (g_headAnimation) {
-            g_headAnimation = false;
-        }
-    };
-    document.getElementById('bodyAnimationOn').onclick = function () {
-        if (!g_bodyAnimation) {
-            g_bodyAnimation = true;
-
-        }
-    };
-    document.getElementById('bodyAnimationOff').onclick = function () {
-        if (g_bodyAnimation) {
-            g_bodyAnimation = false;
-        }
-    };
-    document.getElementById('beakAnimationOn').onclick = function () {
-        if (!g_beakAnimation) {
-            g_beakAnimation = true;
-
-        }
-    };
-    document.getElementById('beakAnimationOff').onclick = function () {
-        if (g_beakAnimation) {
-            g_beakAnimation = false;
-        }
-    };
-    document.getElementById('buttAnimationOn').onclick = function () {
-        if (!g_tailSegAnimation) {
-            g_tailSegAnimation = true;
-
-        }
-    };
-    document.getElementById('buttAnimationOff').onclick = function () {
-        if (g_tailSegAnimation) {
-            g_tailSegAnimation = false;
-        }
-    };
-    document.getElementById('tailAnimationOn').onclick = function () {
-        if (!g_tailAnimation) {
-            g_tailAnimation = true;
-
-        }
-    };
-    document.getElementById('tailAnimationOff').onclick = function () {
-        if (g_tailAnimation) {
-            g_tailAnimation = false;
-        }
-    };
-    document.getElementById('leftLegAnimationOn').onclick = function () {
-        if (!g_leftLegAnimation) {
-            g_leftLegAnimation = true;
-
-        }
-    };
-    document.getElementById('leftLegAnimationOff').onclick = function () {
-        if (g_leftLegAnimation) {
-            g_leftLegAnimation = false;
-        }
-    };
-    document.getElementById('rightLegAnimationOn').onclick = function () {
-        if (!g_rightLegAnimation) {
-            g_rightLegAnimation = true;
-
-        }
-    };
-    document.getElementById('rightLegAnimationOff').onclick = function () {
-        if (g_rightLegAnimation) {
-            g_rightLegAnimation = false;
-        }
-    };
 }
 
 function initEventHandlers(canvas) {
@@ -425,40 +334,108 @@ function initEventHandlers(canvas) {
 
 // Keyboard controls
 function keydown(ev) {
+
+    let blockFront = getBlockInFront();
+    // console.log(blockFront);
+
     if (ev.keyCode == 81) {
         // Q: Camera turns left
-        g_camera.panLeft(10);
+        g_camera.panLeft(5);
+        panningAngle = (panningAngle - 5 + 360) % 360;
     } else if (ev.keyCode == 69) {
         // E: Camera turns right
-        g_camera.panRight(10);
+        g_camera.panRight(5);
+        panningAngle = (panningAngle + 5) % 360;
     } else if (ev.keyCode == 87) {
         // W: Move up
         g_camera.moveForward(1);
+        moveFB++;
     } else if (ev.keyCode == 65) {
         // A: Move left
         g_camera.moveLeft(1);
+        moveLR--;
     } else if (ev.keyCode == 83) {
         // S: Move back
         g_camera.moveBack(1);
+        moveFB--;
     } else if (ev.keyCode == 68) {
         // D: Move right
         g_camera.moveRight(1);
+        moveLR++;
+    } else if (blockFront && (ev.key === 'f' || ev.key === 'F')) { // 'f' key to add block
+        addBlock(blockFront.x, blockFront.z);
+    } else if (blockFront && (ev.key === 'r' || ev.key === 'R')) { // 'r' key to remove block
+        removeBlock(blockFront.x, blockFront.z);
     }
 
+
     renderAllShapes();
-    console.log(ev.keyCode);
+    console.log("Key Code pressed: " + ev.keyCode);
 }
+
+
+//--------------------------------------------------------------------------------------------------------------//
+// Functions and variables that add/delete blocks
+var moveLR = 0; 
+var moveFB = 0;  
+var panningAngle = 180;
+
+function getBlockInFront() {
+    let startX = 19;
+    let startZ = 24;
+
+    let currentX = startX + moveLR;
+    let currentZ = startZ - moveFB;
+
+    let radians = panningAngle * Math.PI / 180;
+
+    let forwardX = Math.sin(radians);
+    let forwardZ = Math.cos(radians);
+
+    let mag = Math.sqrt(forwardX * forwardX + forwardZ * forwardZ);
+    forwardX /= mag;
+    forwardZ /= mag;
+
+    let stepSize = 0.8;
+    let blockX = Math.round(currentX + forwardX * stepSize);
+    let blockZ = Math.round(currentZ + forwardZ * stepSize);
+
+    if (blockX >= 0 && blockX < g_map.length && blockZ >= 0 && blockZ < g_map[blockX].length) {
+        return { x: blockX, z: blockZ };
+    }
+}
+
+function addBlock(x, z) {
+    if (x >= 0 && x < g_map.length && z >= 0 && z < g_map[x].length) {
+        g_map[x][z] += 1; // Assume you can add blocks freely
+        renderAllShapes();
+    }
+}
+
+function removeBlock(x, z) {
+    if (x >= 0 && x < g_map.length && z >= 0 && z < g_map[x].length && g_map[x][z] > 0) {
+        g_map[x][z] -= 1;
+        renderAllShapes();
+    }
+}
+
+//
+//--------------------------------------------------------------------------------------------------------------//
 
 // Texture code
 function initTextures() {
     var image0 = new Image();  // Create the image object for the first texture
     image0.onload = function () { sendImageToTexture0(image0); };
-    image0.src = '../resources/flower-1.jpg'; // Set source for the first texture
+    image0.src = '../resources/psyduckWall.jpg'; // Set source for the first texture
 
     var image1 = new Image();  // Create the image object for the second texture
     image1.onload = function () { sendImageToTexture1(image1); };
     // image1.src = '../resources/uv_grid_opengl.jpg'; 
-    image1.src = '../resources/psyduck.jpg'; 
+    image1.src = '../resources/psyduck.jpg';
+
+    var image2 = new Image();
+    image2.onload = function () { sendImageToTexture2(image2); };
+    image2.src = '../resources/psyduck2.jpg'; 
 }
 
 function sendImageToTexture0(image) {
@@ -493,23 +470,21 @@ function sendImageToTexture1(image) {
     console.log('Finished loading texture 1');
 }
 
-function click(ev) {
-    let x, y;
-    [x, y] = convertCoordinatesEventToGL(ev);
-
-    // Check if the shift key is held down during the mouse click
-    if (ev.shiftKey) {
-        // Toggle the animation state of the tail and feet
-        g_tailAnimation = !g_tailAnimation;
-        g_leftLegAnimation = !g_leftLegAnimation;
-        g_rightLegAnimation = !g_rightLegAnimation;
-
-        // Render all shapes to reflect the change
-        renderAllShapes();
+function sendImageToTexture2(image) {
+    var texture = gl.createTexture();  // Create a texture object
+    if (!texture) {
+        console.log('Failed to create the texture object for texture 2');
         return;
     }
-}
 
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+    gl.uniform1i(u_Sampler2, 2);
+    console.log('Finished loading texture 2');
+}
 
 var g_startTime = performance.now() / 1000.0;
 var g_seconds = performance.now() / 1000.0 - g_startTime;
@@ -517,7 +492,6 @@ var g_seconds = performance.now() / 1000.0 - g_startTime;
 function tick() {
     g_seconds = performance.now() / 1000.0 - g_startTime;
     updateAnimationAngle();
-    // console.log(g_seconds);
     renderAllShapes();
     requestAnimationFrame(tick);
 }
@@ -547,14 +521,19 @@ function updateAnimationAngle() {
 }
 
 // Draw blocky animal duck
-function drawDuck() {
+function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
 
     var body = new Cube();
     body.color = [0.984, 0.816, 0.324, 1.0];
-    body.textureNumber = 3;
-    body.matrix.translate(-0.25, -0.25, 0.0);
+    body.textureNumber = 0;
+    body.matrix = new Matrix4(globalMatrix);
+
+    body.matrix.translate(-0.25, -0.58, 0.0);
     body.matrix.rotate(g_bodyAngle, 0, 0, 1);
     body.matrix.rotate(-2, 1, 0, 0);
+    body.matrix.rotate(rotationAngles[0], 1, 0, 0);
+    body.matrix.rotate(rotationAngles[1], 0, 1, 0);
+    body.matrix.rotate(rotationAngles[2], 0, 0, 1);
     var neckCoords = new Matrix4(body.matrix);
     var tail1 = new Matrix4(body.matrix);
     var leftLegCoord = new Matrix4(body.matrix);
@@ -612,8 +591,8 @@ function drawDuck() {
     tailTip.render();
 
     var leftLeg = new Cube();
-
     leftLeg.color = [0.8, 0.8, 0.8, 1];
+    leftLeg.textureNumber = 0;
     leftLeg.matrix = leftLegCoord;
     leftLeg.matrix.rotate(g_leftLegAngle, 1, 0, 0);
     var leftFeetCoord = new Matrix4(leftLeg.matrix);
@@ -623,6 +602,7 @@ function drawDuck() {
 
     var leftFeet = new Cube();
     leftFeet.color = [0.926, 0.904, 0.739, 1.0];
+    leftFeet.textureNumber = 0;
     leftFeet.matrix = leftFeetCoord;
     leftFeet.matrix.scale(0.2, 0.03, 0.3);
     leftFeet.matrix.translate(-0.2, -5.01, -0.01);
@@ -630,6 +610,7 @@ function drawDuck() {
 
     var rightLeg = new Cube();
     rightLeg.color = [0.8, 0.8, 0.8, 1];
+    rightLeg.textureNumber = 0;
     rightLeg.matrix = rightLegCoord;
     rightLeg.matrix.rotate(g_rightLegAngle, 1, 0, 0);
     var rightFeetCoord = new Matrix4(rightLeg.matrix);
@@ -639,6 +620,7 @@ function drawDuck() {
 
     var rightFeet = new Cube();
     rightFeet.color = [0.926, 0.904, 0.739, 1.0];
+    rightFeet.textureNumber = 0;
     rightFeet.matrix = rightFeetCoord;
     rightFeet.matrix.scale(0.2, 0.03, 0.3);
     rightFeet.matrix.translate(1.7, -5.01, -0.01);
@@ -649,18 +631,7 @@ function renderAllShapes() {
     // Clear <canvas>
     var startTime = performance.now();
 
-    // var projMat = new Matrix4();
-    // projMat.setPerspective(fov, 1 * canvas.width / canvas.height, 1, 100);
-    // gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projMat.elements);
-
-    // var viewMat = new Matrix4();
-    // // setLookAt(eye, at, up)
-    // viewMat.setLookAt(
-    //     g_eye.elements[0], g_eye.elements[1], g_eye.elements[2],
-    //     g_at.elements[0], g_at.elements[1], g_at.elements[2],
-    //     g_up.elements[0], g_up.elements[1], g_up.elements[2]
-    // );
 
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMat.elements);
 
@@ -677,10 +648,9 @@ function renderAllShapes() {
 
     var floor = new Cube();
     floor.color = [0.5, 0.5, 0.5, 1.0];
-    floor.textureNumber = 3;
+    floor.textureNumber = 4;
     floor.matrix.translate(-16, -0.76, 15.2);
     floor.matrix.scale(32, 0, 32);
-    // floor.matrix.translate(-0.5, 0, -0.5);
     floor.render();
 
     var sky = new Cube();
@@ -723,16 +693,10 @@ function main() {
 
     document.onkeydown = keydown;
 
-    // Register function (event handler) to be called on a mouse press
-    // canvas.onmousedown = click;
-    // canvas.onmousemove = function (ev) { if (ev.buttons == 1) { click(ev) } };
-
     initTextures();
 
     // Specify the color for clearing <canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-    // Clear <canvas>
-    // renderAllShapes();
     requestAnimationFrame(tick);
 }
