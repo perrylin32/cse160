@@ -406,7 +406,7 @@ function getBlockInFront() {
 }
 
 function addBlock(x, z) {
-    if (x >= 0 && x < g_map.length && z >= 0 && z < g_map[x].length) {
+    if (x >= 0 && x < g_map.length && z >= 0 && z < g_map[x].length && g_map[x][z] < 5) {
         g_map[x][z] += 1; // Assume you can add blocks freely
         renderAllShapes();
     }
