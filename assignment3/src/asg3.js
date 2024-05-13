@@ -366,10 +366,13 @@ function keydown(ev) {
         addBlock(blockFront.x, blockFront.z);
     } else if (blockFront && (ev.key === 'r' || ev.key === 'R')) { // 'r' key to remove block
         removeBlock(blockFront.x, blockFront.z);
+    } else if (ev.keyCode == 38) {
+        g_camera.moveUp(1);
+    } else if (ev.keyCode == 40) {
+        g_camera.moveDown(1);
     }
 
-
-    renderAllShapes();
+    // renderAllShapes();
     console.log("Key Code pressed: " + ev.keyCode);
 }
 
@@ -408,14 +411,14 @@ function getBlockInFront() {
 function addBlock(x, z) {
     if (x >= 0 && x < g_map.length && z >= 0 && z < g_map[x].length && g_map[x][z] < 5) {
         g_map[x][z] += 1; // Assume you can add blocks freely
-        renderAllShapes();
+        // renderAllShapes();
     }
 }
 
 function removeBlock(x, z) {
     if (x >= 0 && x < g_map.length && z >= 0 && z < g_map[x].length && g_map[x][z] > 0) {
         g_map[x][z] -= 1;
-        renderAllShapes();
+        // renderAllShapes();
     }
 }
 
