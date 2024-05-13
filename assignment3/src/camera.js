@@ -92,4 +92,24 @@ class Camera {
         this.at.add(rotatedDirection);
         this.updateViewMatrix();
     }
+
+    moveUp(speed) {
+        let u = new Vector3();
+        u.set(this.up);
+        u.normalize();
+        u.mul(speed);
+        this.eye.add(u);
+        this.at.add(u);
+        this.updateViewMatrix();
+    }
+    
+    moveDown(speed) {
+        let d = new Vector3();
+        d.set(this.up);
+        d.normalize();
+        d.mul(speed);
+        this.eye.sub(d);
+        this.at.sub(d);
+        this.updateViewMatrix();
+    }
 }
