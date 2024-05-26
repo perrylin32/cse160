@@ -674,7 +674,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     var body = new Cube();
     body.duck = true;
     body.color = [0.984, 0.816, 0.324, 1.0];
-    body.textureNumber = 0;
+    if (g_normal) { body.textureNumber = -1 } else { body.textureNumber = 0 };
     body.matrix = new Matrix4(globalMatrix);
     body.matrix.translate(-0.25, -0.58, 0.0);
     body.matrix.rotate(g_bodyAngle, 0, 0, 1);
@@ -692,7 +692,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     var neck = new Cube();
     neck.duck = true;
     neck.color = [0.984, 0.816, 0.34, 1.0];
-    neck.textureNumber = 0;
+    if (g_normal) { neck.textureNumber = -1 } else { neck.textureNumber = 0 };
     neck.matrix = neckCoords;
     neck.matrix.rotate(g_headAngle, 0, 0, 1);
     var headCoords = new Matrix4(neck.matrix);
@@ -702,7 +702,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
 
     var head = new Cube();
     head.duck = true;
-    head.textureNumber = 0;
+    if (g_normal) { head.textureNumber = -1 } else { head.textureNumber = 0 };
     head.color = [0.984, 0.816, 0.35, 1.0];
     head.matrix = headCoords;
     var beakCoords = new Matrix4(neck.matrix);
@@ -712,7 +712,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
 
     var beak = new Cube();
     beak.duck = true;
-    beak.textureNumber = 0;
+    if (g_normal) { beak.textureNumber = -1 } else { beak.textureNumber = 0 };
     beak.color = [0.926, 0.904, 0.739, 1.0];
     beak.matrix = beakCoords;
     beak.matrix.scale(1.4, 0.3, 0.8);
@@ -723,7 +723,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
 
     var tail = new Cube();
     tail.duck = true;
-    tail.textureNumber = 0;
+    if (g_normal) { tail.textureNumber = -1 } else { tail.textureNumber = 0 };
     tail.color = [0.984, 0.82, 0.35, 1.0];
     tail.matrix = tail1;
     tail.matrix.scale(0.45, 0.45, 0.45);
@@ -733,7 +733,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     tail.render();
 
     var tailTip = new Pyramid(2.0, 1.0, 36);
-    tailTip.textureNumber = 0;
+    if (g_normal) { tailTip.textureNumber = -1 } else { tailTip.textureNumber = 0 };
     tailTip.color = [0.984, 0.816, 0.35, 1.0];
     tailTip.matrix = tail.matrix;
     tailTip.matrix.scale(0.8, 0.8, 0.8);
@@ -745,7 +745,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     var leftLeg = new Cube();
     leftLeg.duck = true;
     leftLeg.color = [0.8, 0.8, 0.8, 1];
-    leftLeg.textureNumber = 0;
+    if (g_normal) { leftLeg.textureNumber = -1 } else { leftLeg.textureNumber = 0 };
     leftLeg.matrix = leftLegCoord;
     leftLeg.matrix.rotate(g_leftLegAngle, 1, 0, 0);
     var leftFeetCoord = new Matrix4(leftLeg.matrix);
@@ -756,7 +756,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     var leftFeet = new Cube();
     leftFeet.duck = true;
     leftFeet.color = [0.926, 0.904, 0.739, 1.0];
-    leftFeet.textureNumber = 0;
+    if (g_normal) { leftFeet.textureNumber = -1 } else { leftFeet.textureNumber = 0 };
     leftFeet.matrix = leftFeetCoord;
     leftFeet.matrix.scale(0.2, 0.03, 0.3);
     leftFeet.matrix.translate(-0.2, -5.01, -0.01);
@@ -765,7 +765,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     var rightLeg = new Cube();
     rightLeg.duck = true;
     rightLeg.color = [0.8, 0.8, 0.8, 1];
-    rightLeg.textureNumber = 0;
+    if (g_normal) { rightLeg.textureNumber = -1 } else { rightLeg.textureNumber = 0 };
     rightLeg.matrix = rightLegCoord;
     rightLeg.matrix.rotate(g_rightLegAngle, 1, 0, 0);
     var rightFeetCoord = new Matrix4(rightLeg.matrix);
@@ -776,7 +776,7 @@ function drawDuck(globalMatrix = new Matrix4(), rotationAngles = [0, 0, 0]) {
     var rightFeet = new Cube();
     rightFeet.duck = true;
     rightFeet.color = [0.926, 0.904, 0.739, 1.0];
-    rightFeet.textureNumber = 0;
+    if (g_normal) { rightFeet.textureNumber = -1 } else { rightFeet.textureNumber = 0 };
     rightFeet.matrix = rightFeetCoord;
     rightFeet.matrix.scale(0.2, 0.03, 0.3);
     rightFeet.matrix.translate(1.7, -5.01, -0.01);
