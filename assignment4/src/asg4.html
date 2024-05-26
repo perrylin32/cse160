@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 4: Lighting</title>
+</head>
+
+<body onload="main()">
+    <canvas id="canvas" width="400" height="400">
+        Please use a browser that supports "canvas"
+    </canvas>
+
+    <p id="performance"></p>
+    
+    Controls:
+    <br>
+    Up Arrow: Move up
+    <br>
+    Down Arrow: Move Down
+    <br>
+    w: Move forward
+    <br>
+    s: Move backwards
+    <br>
+    a: Move to the left
+    <br>
+    d: Move to the right
+    <br>
+    q: Turn the camera to the left
+    <br>
+    e: Turn the camera to the right
+    <br>
+
+    <label for="Camera Angle Y"><b>Camera Angle Y</b></label>
+    <input id="angleSliderY" type="range" min="-181" max="180" value="-180">
+    <label for="Camera Angle X"><b>Camera Angle X</b></label>
+    <input id="angleSliderX" type="range" min="0" max="360" value="5">
+    <label for="Camera Angle Z"><b>Camera Angle Z</b></label>
+    <input id="angleSliderZ" type="range" min="0" max="360" value="5">
+    <br>
+    <br>
+    <button id="NormalOn">Normal On</button>
+    <button id="NormalOff">Normal Off</button>
+    <br>
+    <br>
+    <button id="LightsAnimationOn">Lights Animation On</button>
+    <button id="LightsAnimationOff">Lights Animation Off</button>
+    <button id="SpotlightsAnimationOn">Spotlight Animation On</button>
+    <button id="SpotlightsAnimationOff">Spotlight Animation Off</button>
+    <p>
+        <button id="LightsOn">Lights On</button>
+        <button id="LightsOff">Lights Off</button>
+        <button id="SpotlightOn">Splotlights On</button>
+        <button id="SpotlightOff">Splotlights Off</button>
+        <br>
+        Light X: <input type="range" min="-500" max="500" value="0" class="slider" id="lightSlideX">
+        Light Y: <input type="range" min="-500" max="500" value="100" class="slider" id="lightSlideY">
+        Light Z: <input type="range" min="-500" max="500" value="-200" class="slider" id="lightSlideZ">
+        <br>
+        Spotlight X: <input type="range" min="-500" max="500" value="0" class="slider" id="spotlightSlideX">
+        Spotlight Y: <input type="range" min="-500" max="500" value="100" class="slider" id="spotlightSlideY">
+        Spotlight Z: <input type="range" min="-500" max="500" value="-200" class="slider" id="spotlightSlideZ">
+    </p>
+    <p>
+        Light Color:
+        <br>
+        Red <input type="range" id="Lred" min="0" max="255" value="128" />
+        <input type="number" id="LredValue" min="0" max="255" value="128" disabled /><br>
+        Green <input type="range" id="Lgreen" min="0" max="255" value="128" />
+        <input type="number" id="LgreenValue" min="0" max="255" value="128" disabled /><br>
+        Blue <input type="range" id="Lblue" min="0" max="255" value="128" />
+        <input type="number" id="LblueValue" min="0" max="255" value="128" disabled /><br>
+        Spotlight Color:
+        <br>
+        Red <input type="range" id="Sred" min="0" max="255" value="128" />
+        <input type="number" id="SredValue" min="0" max="255" value="128" disabled /><br>
+        Green <input type="range" id="Sgreen" min="0" max="255" value="0" />
+        <input type="number" id="SgreenValue" min="0" max="255" value="0" disabled /><br>
+        Blue <input type="range" id="Sblue" min="0" max="255" value="0" />
+        <input type="number" id="SblueValue" min="0" max="255" value="0" disabled /><br>
+    </p>
+
+    <p>
+        Perry Lin
+        <br>
+        plin32@ucsc.edu
+        <br>
+        Note To Grader:
+        <br>
+        Spotlight code was taken from: <a
+            href="https://math.hws.edu/graphicsbook/source/webgl/spotlights.html">https://math.hws.edu/graphicsbook/source/webgl/spotlights.html</a>
+        <br>
+        Red cube = Spotlight location.
+        <br>
+        Yellow cube = Point light location.
+    </p>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix-cse160.js"></script>
+
+    <script src="triangle.js"></script>
+    <script src="cube.js"></script>
+    <script src="sphere.js"></script>
+    <script src="cone.js"></script>
+    <script src="camera.js"></script>
+    <script src="asg4.js"></script>
+
+</body>
+
+</html>
