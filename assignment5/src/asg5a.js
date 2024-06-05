@@ -14,7 +14,7 @@ function main() {
 	const fov = 95;
 	const aspect = 2; // the canvas default
 	const near = 0.1;
-	const far = 1000;
+	const far = 10000;
 	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 	camera.position.set(0, 8, 75);
 
@@ -28,15 +28,16 @@ function main() {
 	const color = 0xffffff;
 	const intensity = 3;
 	const light = new THREE.DirectionalLight(color, intensity);
-	light.position.set(-1, 2, 4);
+	light.position.set(-1, 25, 4);
 	//light.target.position.set(5, 5, 0);
 	scene.add(light);
 	//scene.add(light.target);
 
-	const hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.25);
+	const hemiLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
 	scene.add(hemiLight);
 
 	const ambientLight = new THREE.AmbientLight(0x808080);
+	ambientLight.intensity = 1.5;
 	scene.add(ambientLight);
 
 	// scene.background = new THREE.Color('skyblue');
@@ -47,8 +48,8 @@ function main() {
 	const boxHeight = 1;
 	const boxDepth = 1;
 	const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-	const grassGeometry = new THREE.BoxGeometry(90, 0.1, 90);
-	const dirtGeometry = new THREE.BoxGeometry(90, 1, 90);
+	const grassGeometry = new THREE.BoxGeometry(1000, 10, 1000);
+	const dirtGeometry = new THREE.BoxGeometry(1000, 50, 1000);
 	const loader = new THREE.TextureLoader();
 
 	const texture = loader.load(
@@ -58,44 +59,15 @@ function main() {
 			texture.colorSpace = THREE.SRGBColorSpace;
 			scene.background = texture;
 		});
-
+	
+	// 0x00ff00
 	const cubes = [
 		// makeInstance(geometry, 0x44aa88, -5, 0, true),
 		// makeInstance(geometry, 0x8844aa, 5, 0, true),
 		// makeInstance(geometry, 0xaa8844, -7, 0, true),
-		makeInstance(grassGeometry, 0x00ff00, 0, 0, false),
-		makeInstance(dirtGeometry, 0x8B4513, 0, -0.55, false),
+		makeInstance(grassGeometry, 0x55ff55, 0, 0, false),
+		makeInstance(dirtGeometry, 0x8B4513, 0, -30, false),
 	];
-
-	// Make a cylinder
-	// const radiusTop = 1;
-	// const radiusBottom = 1;
-	// const height = 5;
-	// const radialSegments = 32;
-	// const cylinderGeometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
-	// const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
-	// const cylinder = new THREE.Mesh(cylinderGeometry, material);
-	// cylinder.position.set(0, -3.5, 0)
-	// scene.add(cylinder);
-
-	// Make a pyramid
-	// const pyramidGeometry = new THREE.ConeGeometry(1, 2, 4);  // radius, height, radial segments
-	// const pyramidMaterial = new THREE.MeshPhongMaterial({ color: 0xff5533, flatShading: true });
-	// const pyramid = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
-	// pyramid.position.set(0, 25, 0);
-	// pyramid.scale.set(2, 2, 2);
-	// scene.add(pyramid);
-
-	// Make a sphere
-	// const sphereRadius = 3;
-	// const sphereWidthDivisions = 32;
-	// const sphereHeightDivisions = 16;
-	// const sphereGeo = new THREE.SphereGeometry(sphereRadius, sphereWidthDivisions, sphereHeightDivisions);
-	// const sphereMat = new THREE.MeshPhongMaterial();
-	// sphereMat.color.set(0x0000FF); // Set color to blue
-	// const mesh = new THREE.Mesh(sphereGeo, sphereMat);
-	// mesh.position.set(10, sphereRadius + 2, 5); // Position the sphere
-	// scene.add(mesh);
 
 
 	function makeInstance(geometry, color, x, y, useTextures = false) {
@@ -141,59 +113,6 @@ function main() {
 		return texture;
 	}
 
-	function createTree(x, y, z) {
-        const trunkGeometry = new THREE.CylinderGeometry(1, 1, 6, 32);
-        const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
-        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-        trunk.position.set(0, 3, 0);
-
-        const foliageGeometry = new THREE.ConeGeometry(4, 8, 4);
-        const foliageMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
-        const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
-        foliage.position.set(0, 9, 0);
-
-        const tree = new THREE.Group();
-        tree.add(trunk);
-        tree.add(foliage);
-        tree.scale.set(1.5, 1.5, 1.5);
-        tree.position.set(x, y, z);
-
-        return tree;
-    }
-	scene.add(createTree(-25, 0, 25));
-    scene.add(createTree(-15, 0, 28));
-    scene.add(createTree(-25, 0, 38));
-    scene.add(createTree(-12, 0, 38));
-    // scene.add(createTree(0, 0, 25));
-	scene.add(createTree(-5, 0, 30));
-	scene.add(createTree(5, 0, 28));
-	scene.add(createTree(5, 0, 35));
-	scene.add(createTree(15, 0, 35));
-	scene.add(createTree(20, 0, 23));
-	scene.add(createTree(25, 0, 30));
-
-	// // Tree trunk (cylinder)
-	// const trunkGeometry = new THREE.CylinderGeometry(0.5, 0.5, 3, 32);
-	// const trunkMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
-	// const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
-	// trunk.position.set(0, 1.5, 0);
-
-	// // Tree foliage (cone/pyramid)
-	// const foliageGeometry = new THREE.ConeGeometry(2, 4, 4);
-	// const foliageMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
-	// const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
-	// foliage.position.set(0, 4, 0);
-
-	// // Group trunk and foliage
-	// const tree = new THREE.Group();
-	// tree.add(trunk);
-	// tree.add(foliage);
-	// tree.scale.set(3.5, 3.5, 3.5);
-	// tree.position.set(-25, 0, -25);
-	// scene.add(tree);
-
-	// Load .obj <== Duck
-
 	const mtlLoaderDuck = new MTLLoader();
 	const objLoaderDuck = new OBJLoader();
 
@@ -202,8 +121,9 @@ function main() {
 
 		objLoaderDuck.setMaterials(mtl);
 		objLoaderDuck.load('../resources/duck/RubberDuck.obj', (root) => {
-			root.position.set(...[5, 8, 0]);
-			root.scale.set(1.25, 1.25, 1.25);
+			root.position.set(...[-65, 10, 115]);
+			root.scale.set(10, 10, 10);
+			root.rotation.y = Math.PI / -2;
 			scene.add(root);
 		});
 	});
@@ -222,33 +142,6 @@ function main() {
 		});
 	});
 
-	const mtlLoaderEarth = new MTLLoader();
-	const objLoaderEarth = new OBJLoader();
-
-	mtlLoaderEarth.load('../resources/Earth/CHAHIN_EARTH.mtl', (mtl) => {
-		mtl.preload();
-
-		objLoaderEarth.setMaterials(mtl);
-		objLoaderEarth.load('../resources/Earth/CHAHIN_EARTH.obj', (root) => {
-			root.position.set(...[-45, 35, -150]);
-			// root.scale.set(3.25, 3.25, 3.25);
-			scene.add(root);
-		});
-	});
-
-	const mtlLoaderSS = new MTLLoader();
-	const objLoaderSS = new OBJLoader();
-
-	mtlLoaderSS.load('../resources/International_Space_Station/InternationalSpaceStation.mtl', (mtl) => {
-		mtl.preload();
-
-		objLoaderSS.setMaterials(mtl);
-		objLoaderSS.load('../resources/International_Space_Station/InternationalSpaceStation.obj', (root) => {
-			root.position.set(...[75, 45, 25]);
-			root.scale.set(0.5, 0.5, 0.5);
-			scene.add(root);
-		});
-	});
 
 	const mtlLoaderSun = new MTLLoader();
 	const objLoaderSun = new OBJLoader();
@@ -258,8 +151,8 @@ function main() {
 
 		objLoaderSun.setMaterials(mtl);
 		objLoaderSun.load('../resources/Sun/Sun_483.obj', (root) => {
-			root.position.set(...[-45, 40, 0]);
-			root.scale.set(0.5, 0.5, 0.5);
+			root.position.set(...[-750, 500, -400]);
+			root.scale.set(5, 5, 5);
 			scene.add(root);
 
 		});
@@ -273,7 +166,8 @@ function main() {
 
 		objLoaderTurtle.setMaterials(mtl);
 		objLoaderTurtle.load('../resources/Turtle/turtle.obj', (root) => {
-			root.position.set(...[-25, 2, 0]);
+			root.position.set(...[150, 7, 300]);
+			root.scale.set(1.5, 1.5, 1.5);
 			scene.add(root);
 		});
 	});
@@ -286,43 +180,367 @@ function main() {
 
 		objLoaderWaterfall.setMaterials(mtl);
 		objLoaderWaterfall.load('../resources/Waterfall/Waterfall.obj', (root) => {
-			root.position.set(...[10, 0, 0]);
-			root.scale.set(1.1, 1.1, 1.1);
+			root.position.set(...[-80, 0, 95]);
+			root.scale.set(3.5, 3.5, 3.5);
+			root.rotation.y = Math.PI / 2;
 			scene.add(root);
 		});
 	});
 
+	const mtlLoaderBear = new MTLLoader();
+	const objLoaderBear = new OBJLoader();
+
+	mtlLoaderBear.load('../resources/Black_bear/BlackBear.mtl', (mtl) => {
+		mtl.preload();
+
+		objLoaderBear.setMaterials(mtl);
+		objLoaderBear.load('../resources/Black_bear/BlackBear.obj', (root) => {
+			root.position.set(...[-310, 5, 210]);
+			root.scale.set(3.5, 3.5, 3.5);
+			root.rotation.y = Math.PI / 2.25;
+			scene.add(root);
+		});
+	});
+
+	const mtlLoaderMew = new MTLLoader();
+	const objLoaderMew = new OBJLoader();
+
+	mtlLoaderMew.load('../resources/Mew/materials.mtl', (mtl) => {
+		mtl.preload();
+
+		objLoaderMew.setMaterials(mtl);
+		objLoaderMew.load('../resources/Mew/model.obj', (root) => {
+			root.position.set(...[-50, 55, 125]);
+			root.scale.set(50, 50, 50);
+			root.rotation.x = Math.PI;
+			root.rotation.y = Math.PI / -3;
+			root.rotation.z = Math.PI;
+			scene.add(root);
+		});
+	});
+
+	function addEevee(position, scale, rotation = {x: 0, y: 0, z: 0}) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Eevee/materials.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Eevee/model.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.x = rotation.x;
+				root.rotation.y = rotation.y;
+				root.rotation.z = rotation.z;
+				scene.add(root);
+			});
+		});
+	}
+
+	addEevee([225, 15, 55], [25, 25, 25], {x: 0, y: 0, z: 0});
+	addEevee([250, 15, 65], [25, 25, 25], {x: 0, y: Math.PI / 2.95, z: 0});
+	addEevee([205, 15, 65], [25, 25, 25], {x: 0, y: Math.PI / -1.5, z: 0});
+
+	function addPikachu(position, scale, rotation = {x: 0, y: 0, z: 0}) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Pikachu/materials.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Pikachu/model.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.x = rotation.x;
+				root.rotation.y = rotation.y;
+				root.rotation.z = rotation.z;
+				scene.add(root);
+			});
+		});
+	}
+
+	addPikachu([225, 23, 35], [25, 25, 25], {x: 0, y: Math.PI, z: 0});
+	addPikachu([250, 23, 25], [25, 25, 25], {x: 0, y: Math.PI / -0.75, z: 0});
+	addPikachu([275, 23, 45], [25, 25, 25], {x: 0, y: Math.PI / 1.25, z: 0});
+	addPikachu([300, 23, 75], [25, 25, 25], {x: 0, y: Math.PI / 1.5, z: 0});
+
+	function addSnorlax(position, scale, rotation = {x: 0, y: 0, z: 0}) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Snorlax/materials.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Snorlax/model.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.x = rotation.x;
+				root.rotation.y = rotation.y;
+				root.rotation.z = rotation.z;
+				scene.add(root);
+			});
+		});
+	}
+
+	addSnorlax([75, 40, 215], [150, 150, 150], {x: Math.PI / -2.5, y: Math.PI, z: 0});
+	addSnorlax([135, 35, 145], [115, 115, 115], {x: Math.PI / -2.5, y: Math.PI, z: Math.PI / -2});
+
+	function addMagikarp(position, scale, rotation = {x: 0, y: 0, z: 0}) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Magikarp/materials.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Magikarp/model.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.x = rotation.x;
+				root.rotation.y = rotation.y;
+				root.rotation.z = rotation.z;
+				scene.add(root);
+			});
+		});
+	}
+
+	addMagikarp([-110, 30, 125], [35, 35, 35], {x: Math.PI / -2, y: 0, z: Math.PI / 2});
+	addMagikarp([-110, 75, 115], [35, 35, 35], {x: Math.PI / -2.25, y: Math.PI / -2.5, z: Math.PI / 2});
+	addMagikarp([-85, 100, 105], [35, 35, 35], {x: Math.PI / -3, y: 0, z: Math.PI / 2});
+
+	function addGrass(position, scale, rotationY = 0) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Grass_Patch/materials.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Grass_Patch/model.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.y = rotationY;
+				scene.add(root);
+			});
+		});
+	}
+
+	// Grass near the bottom left group of rabbits
+	addGrass([-100, 15, 350], [50, 50, 50]);
+	addGrass([-150, 15, 325], [50, 50, 50]);
+	addGrass([-50, 15, 350], [25, 25, 25]);
+
+	function addRabbit(position, scale, rotationY = 0) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Rabbit/NOVELO_RABBIT.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Rabbit/NOVELO_RABBIT.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.y = rotationY;
+				scene.add(root);
+			});
+		});
+	}
+	
+	// Group of rabbits near the bottom left
+	addRabbit([-150, 25, 350], [0.05, 0.05, 0.05], Math.PI);
+	addRabbit([-100, 25, 325], [0.05, 0.05, 0.05], Math.PI * 1.25);
+	addRabbit([-105, 25, 375], [0.05, 0.05, 0.05], Math.PI / 2.05);
+	addRabbit([-105, 25, 400], [0.05, 0.05, 0.05], Math.PI / -2);
+
+	// Group of rabbits near the top right
+	addRabbit([250, 25, -200], [0.05, 0.05, 0.05], Math.PI);
+	addRabbit([275, 25, -175], [0.05, 0.05, 0.05], Math.PI * 1.25);
+	addRabbit([300, 25, -150], [0.05, 0.05, 0.05], Math.PI / 1.5);
+
+	// Group of rabbits near top left
+	addRabbit([-400, 25, -350], [0.05, 0.05, 0.05], Math.PI);
+	addRabbit([-375, 25, -375], [0.05, 0.05, 0.05], Math.PI * 2.5);
+	addRabbit([-375, 25, -400], [0.05, 0.05, 0.05], Math.PI * 2.25);
+	addRabbit([-350, 25, -350], [0.05, 0.05, 0.05], Math.PI * -2.25);
+	addRabbit([-315, 25, -325], [0.05, 0.05, 0.05], Math.PI * -1.25);
+
+	function addVolcano(position, scale, rotationY = 0) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Volcano/PUSHILIN_volcano.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Volcano/PUSHILIN_volcano.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.y = rotationY;
+				scene.add(root);
+			});
+		});
+	}
+
+	addVolcano([-175, 30, 455], [70, 70, 70]);
+	addVolcano([440, 30, 205], [70, 70, 70], Math.PI / 2);
+
+	function addCow(position, scale, rotationY = 0) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Cow/Cow.mtl', (mtl) => {
+			mtl.preload();
+	
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Cow/Cow.obj', (root) => {
+				root.position.set(...position);
+				root.scale.set(...scale);
+				root.rotation.y = rotationY;
+				scene.add(root);
+			});
+		});
+	}
+
+	addCow([250, 5, 475], [5, 5, 5]);
+	addCow([310, 5, 455], [5, 5, 5], Math.PI / 1.75);
+	addCow([335, 5, 405], [5, 5, 5]);
+	addCow([355, 5, 485], [5, 5, 5], Math.PI / -2.25);
+	addCow([370, 5, 425], [5, 5, 5]);
+
+	function loadRockModel() {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		fetch('rockPosition.json')
+			.then(response => response.json())
+			.then(rockPositions => {
+				mtlLoader.load('../resources/Rock/PUSHILIN_rock.mtl', (mtl) => {
+					mtl.preload();
+					objLoader.setMaterials(mtl);
+					objLoader.load('../resources/Rock/PUSHILIN_rock.obj', (object) => {
+						createRockInstances(object, rockPositions);
+					});
+				});
+			})
+			.catch(error => console.error('Failed to load rock positions:', error));
+	}
+	
+	function createRockInstances(originalObject, positions) {
+		const geometry = originalObject.children[0].geometry;
+		const material = originalObject.children[0].material;
+		const numInstances = positions.length; 
+		const rockInstances = new THREE.InstancedMesh(geometry, material, numInstances);
+	
+		const scaleX = 12.0;
+		const scaleY = 12.0;
+		const scaleZ = 12.0;
+	
+		positions.forEach((pos, index) => {
+			const x = pos.x;
+			const y = pos.y;
+			const z = pos.z;
+	
+			const matrix = new THREE.Matrix4()
+				.makeScale(scaleX, scaleY, scaleZ)
+				.setPosition(x, y, z);
+	
+			rockInstances.setMatrixAt(index, matrix);
+		});
+	
+		rockInstances.instanceMatrix.needsUpdate = true;
+		scene.add(rockInstances);
+	}
+	
+	loadRockModel();
 
 
+	function loadTreeModelAndPositions() {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+	
+		mtlLoader.load('../resources/Tree/tree03.mtl', (mtl) => {
+			mtl.preload();
+			objLoader.setMaterials(mtl);
+			objLoader.load('../resources/Tree/tree03.obj', (object) => {
+				fetch('treePosition.json')
+					.then(response => response.json())
+					.then(treePositions => {
+						createTreeInstances(object, treePositions);
+					})
+					.catch(error => console.error('Failed to load tree positions:', error));
+			});
+		});
+	}
 
-	// const mtlLoaderPond = new MTLLoader();
-	// const objLoaderPond = new OBJLoader();
+	function createTreeInstances(originalObject, positions) {
+		const geometry = originalObject.children[0].geometry;
+		const material = originalObject.children[0].material;
+		const numTrees = positions.length;
+		const treeInstances = new THREE.InstancedMesh(geometry, material, numTrees);
+	
+		const scaleX = 0.35;
+		const scaleY = 0.35;
+		const scaleZ = 0.35;
+	
+		positions.forEach((pos, index) => {
+			const matrix = new THREE.Matrix4();
+			matrix.makeScale(scaleX, scaleY, scaleZ);
+			matrix.setPosition(pos.x, pos.y, pos.z);
+			treeInstances.setMatrixAt(index, matrix);
+		});
+	
+		treeInstances.instanceMatrix.needsUpdate = true;
+		scene.add(treeInstances);
+	}
 
-	// mtlLoaderPond.load('../resources/pond/PUSHILIN_pond.mtl', (mtl) => {
-	// 	mtl.preload();
+	function loadShrubModelandPositions() {
+		fetch('shrubPosition.json')
+			.then(response => response.json())
+			.then(shrubPositions => {
+				const mtlLoader = new MTLLoader();
+				const objLoader = new OBJLoader();
+	
+				mtlLoader.load('../resources/Shrub/Shrub.mtl', (mtl) => {
+					mtl.preload();
+					objLoader.setMaterials(mtl);
+					objLoader.load('../resources/Shrub/Shrub.obj', (object) => {
+						createShrubInstances(object, shrubPositions);
+					});
+				});
+			})
+			.catch(error => console.error('Failed to load shrub positions:', error));
+	}
+	
 
-	// 	objLoaderPond.setMaterials(mtl);
-	// 	objLoaderPond.load('../resources/pond/PUSHILIN_pond.obj', (root) => {
-	// 		root.position.set(...[45, 2, 0]);
-	// 		root.scale.set(20, 20, 20);
-	// 		scene.add(root);
-	// 	});
-	// });
+	function createShrubInstances(originalObject, positions) {
+		const geometry = originalObject.children[0].geometry;
+		const material = originalObject.children[0].material;
+		const numInstances = positions.length;
+		const shrubInstances = new THREE.InstancedMesh(geometry, material, numInstances);
+	
+		const scaleX = 3.5; 
+		const scaleY = 3.5; 
+		const scaleZ = 3.5; 
+	
+		positions.forEach((pos, index) => {
+			const matrix = new THREE.Matrix4();
+			matrix.makeScale(scaleX, scaleY, scaleZ);
+			matrix.setPosition(pos.x, pos.y, pos.z);
+	
+			shrubInstances.setMatrixAt(index, matrix);
+		});
+	
+		shrubInstances.instanceMatrix.needsUpdate = true;
+		scene.add(shrubInstances);
+	}
 
-	// function loadModel(mtlPath, objPath, position) {
-	// 	mtlLoader.load(mtlPath, (mtl) => {
-	// 		mtl.preload();
-	// 		objLoader.setMaterials(mtl);
-	// 		objLoader.load(objPath, (root) => {
-	// 			root.position.set(...position); // Spread the position array [x, y, z]
-	// 			scene.add(root);
-	// 		});
-	// 	});
-	// }
-
-	// loadModel('../resources/duck/RubberDuck.mtl', '../resources/duck/RubberDuck.obj', [0, 0, 0]);
-	// loadModel('../resources/pond/PUSHILIN_pond.mtl', '../resources/pond/PUSHILIN_pond.obj', [5, 0, 0]);
-
+	loadTreeModelAndPositions();
+	loadShrubModelandPositions();
+    
 
 	function resizeRendererToDisplaySize(renderer) {
 
